@@ -1,16 +1,12 @@
 import { FastifyPluginAsync } from 'fastify';
-import { addPost } from './routes/addPost';
-import { deletePostAll } from './routes/deletePostAll';
-import { deletePostByAssociatedCategory } from './routes/deletePostByAssociatedCategory';
-import { deletePostById } from './routes/deletePostById';
-import { getPost } from './routes/getPost';
-import { postList } from './routes/postList';
+import { createParking } from './routes/createParking';
+import { getParkingById } from './routes/getParkingById';
+import { getParkingsByUser } from './routes/getParkingsByUser';
+import { getParkingsCloseToAddress } from './routes/getParkingsCloseToAddress';
 
 export const parkingPlugin: FastifyPluginAsync = async (app) => {
-  app.register(addPost);
-  app.register(getPost);
-  app.register(postList);
-  app.register(deletePostAll);
-  app.register(deletePostById);
-  app.register(deletePostByAssociatedCategory);
+  app.register(getParkingsByUser);
+  app.register(getParkingById);
+  app.register(getParkingsCloseToAddress);
+  app.register(createParking);
 };

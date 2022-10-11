@@ -15,19 +15,19 @@ export const SignupForm = () => {
             <>
               <div tw="flex justify-center py-2">{user.nickname}</div>
               <div tw="flex justify-center py-2">{user.email}</div>
-              <div tw="flex justify-center py-1 border rounded bg-red-400">
-                <Link href="/api/auth/logout">
+              <Link href="/api/auth/logout">
+                <div tw="cursor-pointer flex justify-center py-1 border rounded bg-red-400">
                   <a>LOGOUT</a>
-                </Link>
-              </div>
+                </div>
+              </Link>
             </>
           )}
           {!user && (
-            <div tw="flex justify-center py-1 border rounded bg-blue-400">
-              <Link href="/api/auth/login">
+            <Link href="/api/auth/login">
+              <div tw="cursor-pointer flex justify-center py-1 border rounded bg-blue-400">
                 <a>LOGIN</a>
-              </Link>
-            </div>
+              </div>
+            </Link>
           )}
         </div>
       </div>

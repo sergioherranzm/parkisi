@@ -4,27 +4,28 @@ import { UserProfileDocument } from '../../userProfile/model/UserProfileModel';
 
 export interface ParkingDocument extends Document {
   address: string;
-  postalCode: string;
+  postalCode?: string;
   city?: string;
   province?: string;
   location: { type: 'Point'; coordinates: [number, number] }; //GeoJSON
-  owner: UserProfileDocument['_id']; //Schema.Types.ObjectId
+  description: string;
+  owner: UserProfileDocument['_id'];
 }
 
 const schema = new Schema(
   {
     address: { type: String, required: true },
-    postalCode: { type: String, required: true },
+    postalCode: String,
     city: String,
     province: String,
     location: {
       type: { type: String, enum: ['Point'], required: true },
-      coodinates: {
+      coordinates: {
         type: [Number],
-        index: { type: '2dsphere', sparse: false },
         required: true,
       },
     },
+    description: { type: String, required: true },
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'UserProfile',
@@ -40,6 +41,10 @@ schema.virtual('slots', {
   foreignField: 'parking',
 });
 
-//schema.index({ location: '2dsphere' });
+schema.index({ location: '2dsphere' });
 
-export const ParkingModel = mongoose.model<ParkingDocument>('Parking', schema);
+export const ParkingModel = mongoose.model<ParkingDocument>(
+  'Parking',
+  schema,
+  'parkings'
+);

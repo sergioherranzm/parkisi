@@ -2,5 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js"
+  "/api/backend/[...params]": "pages/api/backend/[...params].js",
+  "/slot/[slot_id]": "pages/slot/[slot_id].js"
 }

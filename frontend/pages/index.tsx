@@ -1,13 +1,13 @@
-import Head from 'next/head';
-import { SignupForm } from '../components/SignupForm';
-
-export default function Home() {
+const Home = () => {
   return (
     <>
-      <Head>
-        <title>Parkisi</title>
-      </Head>
-      <SignupForm />
+      <div tw=" mx-auto ">
+        <h1 tw="text-4xl font-extrabold m-5">HOMEPAGE</h1>
+        <p tw="text-3xl m-5">Welcome to parkisi</p>
+        <p tw="text-xl m-5">Sign in to start offering or reserving parkings</p>
+      </div>
     </>
   );
-}
+};
+
+export default Home;

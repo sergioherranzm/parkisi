@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify';
-import { CategoryModel } from '../models/CategoryModel';
+import { UserProfileModel } from '../model/UserProfileModel';
 
 export const addCategory: FastifyPluginAsync = async (app) => {
   app.post<{ Body: { title: string; description: string } }>(
@@ -9,7 +9,7 @@ export const addCategory: FastifyPluginAsync = async (app) => {
 
       const name = title.replace(/\s/g, '');
 
-      await CategoryModel.create({ name, title, description });
+      await UserProfileModel.create({ name, title, description });
       reply.redirect('/category/list');
     }
   );

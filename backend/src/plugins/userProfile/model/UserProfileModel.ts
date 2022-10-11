@@ -1,24 +1,26 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface UserProfileDocument extends Document {
+  auth0_id: string;
   nickname: string;
   name?: string;
   surname?: string;
   email: string;
   phone?: number;
-  //role: 'client' | 'owner';
+  description?: string;
 }
 
 const schema = new Schema(
   {
+    auth0_id: { type: String, required: true, unique: true },
     nickname: { type: String, required: true },
     name: String,
     surname: String,
     email: { type: String, required: true, unique: true },
     phone: Number,
-    //role: { type: String, required: true },
+    description: String,
   },
-  { timestamps: true }
+  { timestamps: false }
 );
 
 schema.virtual('parkings', {
@@ -41,5 +43,6 @@ schema.virtual('reserves', {
 
 export const UserProfileModel = mongoose.model<UserProfileDocument>(
   'UserProfile',
-  schema
+  schema,
+  'userprofiles'
 );

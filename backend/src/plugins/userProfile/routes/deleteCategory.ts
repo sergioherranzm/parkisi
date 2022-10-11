@@ -1,14 +1,17 @@
 import { FastifyPluginAsync } from 'fastify';
-import { CategoryDocument, CategoryModel } from '../models/CategoryModel';
+import {
+  UserProfileDocument,
+  UserProfileModel,
+} from '../model/UserProfileModel';
 
 export const deleteCategory: FastifyPluginAsync = async (app) => {
   app.get<{ Params: { name: string } }>(
     '/:name/delete',
     async (request, reply) => {
       const { name } = request.params;
-      const selCat = (await CategoryModel.findOneAndDelete({
+      const selCat = (await UserProfileModel.findOneAndDelete({
         name,
-      })) as CategoryDocument;
+      })) as UserProfileDocument;
       reply.redirect(`/post/delete?associatedCategory=${selCat['_id']}`);
     }
   );

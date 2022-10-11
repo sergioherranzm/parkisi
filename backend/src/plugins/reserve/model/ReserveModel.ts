@@ -32,4 +32,8 @@ const schema = new Schema(
   { timestamps: true }
 );
 
-export const ReserveModel = mongoose.model<ReserveDocument>('Reserve', schema);
+export const ReserveModel = mongoose.model<ReserveDocument>(
+  'Reserve',
+  schema,
+  'reserves'
+);
