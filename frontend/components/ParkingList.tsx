@@ -1,23 +1,32 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import useSWR from 'swr';
+import { sizesMap } from '../types/sizesMap';
 import { StaticMap } from './maps/StaticMap';
+import { StaticDatePickerWidget } from './StaticDatePickerWidget';
+import LatLon from 'geodesy/latlon-spherical.js';
 
-export const ParkingList: React.FC<{ lat: string; lng: string }> = (props) => {
-  const { lng, lat } = props;
+export const ParkingList: React.FC<{
+  lat: string;
+  lng: string;
+  vehiclePlate: string;
+}> = (props) => {
+  const { lng, lat, vehiclePlate } = props;
 
-  const limit = 2;
+  const currentPos = new LatLon(lat, lng);
+
+  const limit = 3;
   const maxKm = 20;
 
   const router = useRouter();
   const { data: parkings } = useSWR(
     `/parking/address?lng=${lng}&lat=${lat}&limit=${limit}&maxKm=${maxKm}`
   );
+  const { data: vehicle } = useSWR(`/vehicle/plate/${vehiclePlate}`);
 
   const [selectedParking, setSelectedParking] = useState(null);
-  //console.log(' Current: lng=', lng, 'lat=', lat);
 
-  const markers = parkings?.map((p, i) => {
+  let markers = parkings?.map((p, i) => {
     return {
       coordinates: p.location.coordinates,
       color: 'red',
@@ -25,6 +34,9 @@ export const ParkingList: React.FC<{ lat: string; lng: string }> = (props) => {
     };
   });
   //Add the selected address to the map
+  if (!markers) {
+    markers = [];
+  }
   markers?.push({
     coordinates: [lng, lat],
     color: 'purple',
@@ -48,12 +60,16 @@ export const ParkingList: React.FC<{ lat: string; lng: string }> = (props) => {
                   </p>
                   <h4 tw="text-2xl">Address: {parking.address}</h4>
                   <p>Number of parking slots: {parking.slots.length}</p>
-                  <button
-                    tw="border border-black bg-gray-300"
-                    onClick={() => router.push(`/parking/${parking._id}`)}
-                  >
-                    See slots
-                  </button>
+                  <p>
+                    Distance:{' '}
+                    {Math.round(
+                      new LatLon(
+                        parking.location.coordinates[1],
+                        parking.location.coordinates[0]
+                      ).distanceTo(currentPos) / 10
+                    ) / 100}{' '}
+                    km
+                  </p>
                 </div>
               ))}
             </div>
@@ -70,16 +86,28 @@ export const ParkingList: React.FC<{ lat: string; lng: string }> = (props) => {
                 <div tw="my-2 flex gap-3">
                   {selectedParking.slots.map((slot) => (
                     <div key={slot._id} tw="border p-1">
-                      <h3>{slot.identification}</h3>
-                      <p>Size: {slot.size}</p>
+                      <h3 tw="text-2xl">Slot {slot.identification}</h3>
+                      <p>Size: {sizesMap[slot?.size]}</p>
                       <p>Parking difficulty: {slot.difficulty}</p>
                       <p>Price: {slot.price}€/day</p>
+                      {slot.size < vehicle.size && (
+                        <p tw="text-red-600 font-bold">
+                          This slot may be too small for your {vehicle.model}
+                        </p>
+                      )}
+
                       <button
                         tw="border border-black bg-gray-300 p-1"
-                        onClick={() => router.push(`/slot/${slot._id}`)}
+                        onClick={() =>
+                          router.push(
+                            `/slot/${slot._id}?vehicleId=${vehicle._id}`
+                          )
+                        }
                       >
-                        Select
+                        Select this slot
                       </button>
+                      <p>Slot availability:</p>
+                      <StaticDatePickerWidget slotId={slot._id} />
                     </div>
                   ))}
                 </div>
@@ -94,7 +122,14 @@ export const ParkingList: React.FC<{ lat: string; lng: string }> = (props) => {
         </>
       )}
 
-      {!parkings?.length && <p>No parking found</p>}
+      {!parkings?.length && (
+        <>
+          <p>No parking found</p>{' '}
+          <div>
+            <StaticMap size="700x300" zoom={15} markers={markers} />
+          </div>
+        </>
+      )}
     </div>
   );
 };

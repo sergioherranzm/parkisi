@@ -4,30 +4,31 @@ import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import useSWR from 'swr';
 
 export const StaticDatePickerWidget = (props) => {
-  const { reserves } = props;
+  const { slotId } = props;
 
-  console.log('Reserves:', reserves);
+  const { data: slot } = useSWR(`/slot/detail/${slotId}`);
+  const reservesPeriods = slot?.reserves
+    ?.map((reserve) => reserve.period)
+    .flat();
 
   const disableReserves = (date) => {
-    const reservesArr = [dayjs('2022-10-18'), dayjs('2022-10-28')];
+    const formatDate =
+      date.date() + '/' + date.add(1, 'month').month() + '/' + date.year();
 
-    for (let i = 0; i < reservesArr.length; i++) {
-      if (
-        date.year() === reservesArr[i].year() &&
-        date.month() === reservesArr[i].month() &&
-        date.date() === reservesArr[i].date()
-      ) {
-        return true;
-      }
+    if (reservesPeriods?.includes(formatDate)) {
+      return true;
+    } else {
+      return false;
     }
-    return false;
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
+        disablePast
         readOnly
         displayStaticWrapperAs="desktop"
         openTo="day"

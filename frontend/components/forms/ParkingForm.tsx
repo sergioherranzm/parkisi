@@ -1,10 +1,16 @@
-import { useUser } from '@auth0/nextjs-auth0';
+import { RequestError, useUser } from '@auth0/nextjs-auth0';
 import axios, { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import { MAPS_API_URL, PROXY_URL } from '../../lib/config';
+import {
+  FRONT_URL,
+  GOOGLE_API_KEY,
+  MAILER_URL,
+  MAPS_API_URL,
+  PROXY_URL,
+} from '../../lib/config';
 import { StaticMap } from '../maps/StaticMap';
 import { FormInput } from './form_widgets/FormInput';
 import { FormTextarea } from './form_widgets/FormTextArea';
@@ -33,7 +39,16 @@ export const ParkingForm = () => {
     const url = `${PROXY_URL}/parking`;
     const postResponse: AxiosResponse = await axios.post(url, parkingData);
     if (postResponse.status === 200) {
-      router.push('/parking/list?newParking=true');
+      //send mail
+      const mailType = 'parkingCreation';
+      const mailTo = userProfile.email;
+      const address = parkingData.address;
+      const description = parkingData.description;
+      const hyperlink = `${FRONT_URL}parking/list`;
+      const url_mail = `${MAILER_URL}/sendMail?mailType=${mailType}&mailTo=${mailTo}&address=${address}&description=${description}&hyperlink=${hyperlink}`;
+      const sendMailResponse: AxiosResponse = await axios.get(url_mail);
+      //redirection
+      router.push(`/parking/list?newParking=${postResponse.data.parkingId}`);
     } else {
       throw new Error('Parking creation failed');
     }
@@ -66,6 +81,7 @@ export const ParkingForm = () => {
           type: 'Point',
           coordinates: [dataCoord.data.lng, dataCoord.data.lat],
         },
+        image: `https://maps.googleapis.com/maps/api/staticmap?size=400x400&zoom=17&scale=1&format=png&maptype=roadmap&key=${GOOGLE_API_KEY}&markers=size:normal%7Ccolor:purple%7Clabel:P%7C${dataCoord.data.lat},${dataCoord.data.lng}`,
       });
       setAddressReady('OK');
     } else {
@@ -83,6 +99,12 @@ export const ParkingForm = () => {
 
   return (
     <>
+      <button
+        tw="border bg-green-200 p-1 mx-5"
+        onClick={() => router.push(`/api/mailer/sendMailtest`)}
+      >
+        MAIL
+      </button>
       <div tw="flex-col py-6">
         <div>
           <FormInput

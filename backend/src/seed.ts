@@ -22,6 +22,13 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
     console.log('No user profile to drop');
   }
   */
+  /*
+  try {
+    await VehicleModel.collection.drop();
+  } catch (error) {
+    console.log('No vehicle to drop');
+  }
+*/
 
   try {
     await ParkingModel.collection.drop();
@@ -34,13 +41,6 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
   } catch (error) {
     console.log('No slot to drop');
   }
-
-  try {
-    await VehicleModel.collection.drop();
-  } catch (error) {
-    console.log('No vehicle to drop');
-  }
-
   try {
     await ReserveModel.collection.drop();
   } catch (error) {
@@ -60,15 +60,17 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
   const parking1 = await ParkingModel.create({
     address: 'address_seed',
     postalCode: 'seed_code',
-    location: { type: 'Point', coordinates: [40.4765501, -3.7003632] },
+    location: { type: 'Point', coordinates: [-3.7003632, 40.4765501] },
     description: 'Loren ipsum description',
+    image:
+      'https://i.picsum.photos/id/172/200/200.jpg?hmac=TU8G-y4_SgGNs4TuPhPvRQLvw2TUccb3fVgi-hnIsGE',
     owner: seedProfile?._id,
   });
 
   // Create SLOT
   const slot1 = await SlotModel.create({
     identification: 'idSeed_slot',
-    size: 3,
+    size: 1,
     difficulty: 'easy',
     availability: [],
     price: 9,
@@ -78,7 +80,7 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
   // Create VEHICLES
   const vehicle1 = await VehicleModel.create({
     type: 'car',
-    size: 1,
+    size: 3,
     plate: 'XXXXYYY',
     model: 'model_seed',
     owner: seedProfile?._id,
@@ -86,7 +88,7 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
 
   // Create RESERVE
   const reserve1 = await ReserveModel.create({
-    period: [],
+    period: ['22/10/2022', '23/10/2022', '24/10/2022', '25/10/2022'],
     slot: slot1._id,
     owner: seedProfile?._id,
     vehicle: vehicle1._id,

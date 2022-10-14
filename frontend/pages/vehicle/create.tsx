@@ -1,24 +1,15 @@
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { SlotForm } from '../../components/forms/SlotForm';
+import { VehicleForm } from '../../components/forms/VehicleForm';
 
 const Page = () => {
   const router = useRouter();
-  const {
-    query: { parkingId },
-  } = router;
-
-  const { data: parking } = useSWR(
-    parkingId ? `/parking/detail/${parkingId}` : null
-  );
 
   const { user } = useUser();
   const { data: userProfile } = useSWR(
     user?.sub ? `/userProfile/${user?.sub}` : null
   );
-
-  const isOwner = parking?.owner === userProfile?._id;
 
   return (
     <>
@@ -30,15 +21,10 @@ const Page = () => {
       </button>
       <div tw=" mx-auto ">
         <h1 tw="text-4xl font-extrabold">CREATE VEHICLE</h1>
-        {isOwner && (
-          <>
-            <p>WIP</p>
-          </>
-        )}
-        {!isOwner && <p>WIP</p>}
+        <VehicleForm />
       </div>
     </>
   );
 };
 
-export default Page;
+export default withPageAuthRequired(Page);

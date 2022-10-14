@@ -1,3 +1,4 @@
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { ReserveForm } from '../../components/forms/ReserveForm';
 
 const Page = () => {
@@ -14,4 +15,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withPageAuthRequired(Page);

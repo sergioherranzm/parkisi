@@ -1,4 +1,4 @@
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { SlotForm } from '../../components/forms/SlotForm';
@@ -32,7 +32,7 @@ const Page = () => {
         <h1 tw="text-4xl font-extrabold">CREATE SLOT</h1>
         {isOwner && (
           <>
-            <SlotForm />
+            <SlotForm parkingId={parking._id} />
           </>
         )}
         {!isOwner && <p>Only the parking owner can create new parking slots</p>}
@@ -41,4 +41,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withPageAuthRequired(Page);

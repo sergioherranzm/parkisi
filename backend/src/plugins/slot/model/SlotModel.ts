@@ -5,7 +5,6 @@ export interface SlotDocument extends Document {
   identification: string;
   size: 1 | 2 | 3; //'small' | 'medium' | 'large';
   difficulty: 'easy' | 'medium' | 'hard';
-  availability: Date[];
   price: number;
   parking: ParkingDocument['_id'];
 }
@@ -15,7 +14,6 @@ const schema = new Schema(
     identification: { type: String, required: true },
     size: { type: Number, required: true },
     difficulty: { type: String, required: true },
-    availability: { type: [Schema.Types.Date], required: true },
     price: { type: Number, required: true },
     parking: {
       type: Schema.Types.ObjectId,

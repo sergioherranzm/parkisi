@@ -1,3 +1,4 @@
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { ParkingForm } from '../../components/forms/ParkingForm';
 
 const Page = () => {
@@ -11,4 +12,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withPageAuthRequired(Page);

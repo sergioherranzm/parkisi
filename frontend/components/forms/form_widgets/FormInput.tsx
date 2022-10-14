@@ -4,6 +4,7 @@ import React from 'react';
 export const FormInput = React.forwardRef<
   HTMLInputElement,
   {
+    type?: HTMLInputElement['type'];
     name: string;
     label: string;
     value?: string;
@@ -12,13 +13,14 @@ export const FormInput = React.forwardRef<
     error?: string;
   }
 >(((props, ref) => {
-  const { name, label, value, onChange, onBlur, error } = props;
+  const { type = 'text', name, label, value, onChange, onBlur, error } = props;
   return (
     <div tw="w-full">
       <label htmlFor={name} tw="font-bold">
         {label}
       </label>
       <input
+        type={type}
         ref={ref}
         name={name}
         value={value}

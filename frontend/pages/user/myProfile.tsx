@@ -1,9 +1,12 @@
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 const Page = () => {
   const router = useRouter();
+  const {
+    query: { newVehicle, deleteVehicle },
+  } = router;
   const { user } = useUser();
   const { data: userProfile } = useSWR(
     user?.sub ? `/userProfile/${user?.sub}` : null
@@ -13,6 +16,12 @@ const Page = () => {
     <>
       <div tw=" mx-auto ">
         <h1 tw="text-4xl font-extrabold">MY PROFILE</h1>
+        {newVehicle && (
+          <div tw="text-green-500 bg-green-300">New vehicle created</div>
+        )}
+        {deleteVehicle && (
+          <div tw="text-green-500 bg-green-300">Vehicle deleted</div>
+        )}
         <div tw="my-2">
           {userProfile && (
             <>
@@ -33,6 +42,9 @@ const Page = () => {
                   <div tw="flex">
                     {userProfile.vehicles.map((vehicle) => (
                       <div key={vehicle._id} tw="border p-1">
+                        {newVehicle === vehicle._id && (
+                          <div tw="text-green-500 bg-green-300">NEW</div>
+                        )}
                         <h3>{vehicle.plate}</h3>
                         <p>{vehicle.model}</p>
                         <p>Type: {vehicle.type}</p>
@@ -42,12 +54,6 @@ const Page = () => {
                           onClick={() => router.push(`/vehicle/${vehicle._id}`)}
                         >
                           Edit
-                        </button>
-                        <button
-                          tw="border border-black bg-gray-300 p-1"
-                          onClick={() => router.push(`#`)}
-                        >
-                          Delete
                         </button>
                       </div>
                     ))}
@@ -72,4 +78,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withPageAuthRequired(Page);

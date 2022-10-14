@@ -4,7 +4,7 @@ import { UserProfileDocument } from '../../userProfile/model/UserProfileModel';
 import { VehicleDocument } from '../../vehicle/model/VehicleModel';
 
 export interface ReserveDocument extends Document {
-  period: Date[];
+  period: string[];
   slot: SlotDocument['_id'];
   owner: UserProfileDocument['_id'];
   vehicle: VehicleDocument['_id'];
@@ -12,7 +12,7 @@ export interface ReserveDocument extends Document {
 
 const schema = new Schema(
   {
-    period: { type: [Schema.Types.Date], required: true },
+    period: { type: [String], required: true },
     slot: {
       type: Schema.Types.ObjectId,
       ref: 'Slot',

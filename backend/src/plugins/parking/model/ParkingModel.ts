@@ -9,6 +9,7 @@ export interface ParkingDocument extends Document {
   province?: string;
   location: { type: 'Point'; coordinates: [number, number] }; //GeoJSON
   description: string;
+  image: string;
   owner: UserProfileDocument['_id'];
 }
 
@@ -26,6 +27,7 @@ const schema = new Schema(
       },
     },
     description: { type: String, required: true },
+    image: { type: String, required: true },
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'UserProfile',

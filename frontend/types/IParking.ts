@@ -5,5 +5,6 @@ export interface IParking {
   province?: string;
   location?: { type: 'Point'; coordinates: [number, number] }; //GeoJSON
   description?: string;
+  image?: string;
   owner?: Object;
 }

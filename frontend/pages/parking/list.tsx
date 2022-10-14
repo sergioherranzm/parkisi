@@ -1,11 +1,11 @@
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 const Page = () => {
   const router = useRouter();
   const {
-    query: { newParking },
+    query: { newParking, deleteParking },
   } = router;
   const { user } = useUser();
   const { data: myParkings } = useSWR(
@@ -19,7 +19,9 @@ const Page = () => {
         {newParking && (
           <div tw="text-green-500 bg-green-300">New parking created</div>
         )}
-
+        {deleteParking && (
+          <div tw="text-green-500 bg-green-300">Parking deleted</div>
+        )}
         <div tw="my-2">
           {myParkings?.length > 0 &&
             myParkings.map((parking) => (
@@ -27,6 +29,9 @@ const Page = () => {
                 key={parking._id}
                 tw="border border-black shadow-lg p-3 rounded-lg bg-white"
               >
+                {newParking === parking._id && (
+                  <div tw="text-green-500 bg-green-300">NEW</div>
+                )}
                 <h4 tw="text-2xl">Address: {parking.address} street</h4>
                 <p tw="text-gray-500">Postal Code: {parking.postalCode}</p>
                 <p>Number of parking slots: {parking.slots.length}</p>
@@ -51,4 +56,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withPageAuthRequired(Page);
