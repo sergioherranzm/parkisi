@@ -1,0 +1,5 @@
+.MuiButtonBase-root.MuiPickersDay-root.Mui-disabled {
+  color: red;
+  font-weight: bold;
+  background-color: rgb(255, 198, 198);
+}
