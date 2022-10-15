@@ -17,13 +17,6 @@ export const getParkingsCloseToAddress: FastifyPluginAsync = async (app) => {
         ? parseInt(request.query.maxKm, 10)
         : 50;
 
-      /*
-      const listParking = await ParkingModel.find({})
-        .limit(limit)
-        .populate('slots')
-        .lean();
-*/
-
       const listParking = await ParkingModel.find({
         location: {
           $near: {
@@ -38,8 +31,6 @@ export const getParkingsCloseToAddress: FastifyPluginAsync = async (app) => {
         .limit(limit)
         .populate('slots')
         .lean();
-
-      //console.log(listParking);
 
       return listParking;
     }

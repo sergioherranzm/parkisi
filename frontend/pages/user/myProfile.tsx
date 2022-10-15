@@ -1,4 +1,5 @@
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import Carousel from 'react-material-ui-carousel';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
@@ -39,24 +40,34 @@ const Page = () => {
               <h4 tw="text-2xl">My vehicles:</h4>
               {userProfile.vehicles?.length > 0 && (
                 <>
-                  <div tw="flex">
-                    {userProfile.vehicles.map((vehicle) => (
-                      <div key={vehicle._id} tw="border p-1">
-                        {newVehicle === vehicle._id && (
-                          <div tw="text-green-500 bg-green-300">NEW</div>
-                        )}
-                        <h3>{vehicle.plate}</h3>
-                        <p>{vehicle.model}</p>
-                        <p>Type: {vehicle.type}</p>
-                        <p>Size: {vehicle.size}</p>
-                        <button
-                          tw="border border-black bg-gray-300 p-1"
-                          onClick={() => router.push(`/vehicle/${vehicle._id}`)}
-                        >
-                          Edit
-                        </button>
-                      </div>
-                    ))}
+                  <div tw="">
+                    <Carousel
+                      autoPlay={false}
+                      animation="slide"
+                      navButtonsAlwaysVisible={true}
+                      navButtonsWrapperProps={{ style: { margin: '0 0px' } }}
+                      sx={{}}
+                    >
+                      {userProfile.vehicles.map((vehicle) => (
+                        <div key={vehicle._id} tw="border p-1 mx-16">
+                          {newVehicle === vehicle._id && (
+                            <div tw="text-green-500 bg-green-300">NEW</div>
+                          )}
+                          <h3>{vehicle.plate}</h3>
+                          <p>{vehicle.model}</p>
+                          <p>Type: {vehicle.type}</p>
+                          <p>Size: {vehicle.size}</p>
+                          <button
+                            tw="border border-black bg-gray-300 p-1"
+                            onClick={() =>
+                              router.push(`/vehicle/${vehicle._id}`)
+                            }
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      ))}
+                    </Carousel>
                   </div>
                 </>
               )}

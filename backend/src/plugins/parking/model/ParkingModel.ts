@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { SlotDocument } from '../../slot/model/SlotModel';
 import { UserProfileDocument } from '../../userProfile/model/UserProfileModel';
 
 export interface ParkingDocument extends Document {

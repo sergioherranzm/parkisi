@@ -1,7 +1,6 @@
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { FormSelect } from './form_widgets/FormSelect';
 import { useEffect, useState } from 'react';
-import { DateRangePickerWidget } from './form_widgets/DateRangePickerWidget';
 import axios, { AxiosResponse } from 'axios';
 import { MAPS_API_URL } from '../../lib/config';
 import { ParkingList } from '../ParkingList';

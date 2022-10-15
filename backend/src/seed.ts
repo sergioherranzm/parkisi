@@ -28,9 +28,8 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
   } catch (error) {
     console.log('No vehicle to drop');
   }
-*/
 
-  try {
+    try {
     await ParkingModel.collection.drop();
   } catch (error) {
     console.log('No parking to drop');
@@ -46,6 +45,7 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
   } catch (error) {
     console.log('No reserve to drop');
   }
+*/
 
   // Create PROFILES
   /*
@@ -55,7 +55,7 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
     email: 'seed@seed.com',
   });
   */
-
+  /*
   // Create PARKINGS
   const parking1 = await ParkingModel.create({
     address: 'address_seed',
@@ -93,7 +93,9 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
     owner: seedProfile?._id,
     vehicle: vehicle1._id,
   });
+  */
 
   await mongoose.disconnect();
   console.log('❎ Database connection CLOSED');
+  console.log('Seed process COMPLETED');
 })();

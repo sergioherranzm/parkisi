@@ -64,7 +64,9 @@ export const CheckoutSlotForm = (props) => {
       )}`
     );
   };
-
+  {
+    /* eslint-disable */
+  }
   useEffect(() => {
     if (reserveData.owner && dateError === '') {
       goCheckout(
@@ -75,7 +77,9 @@ export const CheckoutSlotForm = (props) => {
       );
     }
   }, [reserveData, dateError]);
-
+  {
+    /* eslint-enable */
+  }
   const validatePeriod = (dateArr) => {
     for (let i = 0; i < dateArr.length; i++) {
       if (reservesPeriods?.includes(dateArr[i])) {

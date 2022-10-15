@@ -7,7 +7,7 @@ export const createVehicle: FastifyPluginAsync = async (app) => {
   }>('/', async (request, reply) => {
     const newVehicle = await VehicleModel.create(JSON.parse(request.body));
 
-    console.log('NEW vehicle created:', JSON.parse(request.body));
+    //console.log('NEW vehicle created:', JSON.parse(request.body));
 
     return { vehicleId: newVehicle._id };
   });

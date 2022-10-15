@@ -7,7 +7,7 @@ export const createParking: FastifyPluginAsync = async (app) => {
   }>('/', async (request, reply) => {
     const newParking = await ParkingModel.create(JSON.parse(request.body));
 
-    console.log('NEW Parking created:', JSON.parse(request.body));
+    //console.log('NEW Parking created:', JSON.parse(request.body));
 
     return { parkingId: newParking._id };
   });

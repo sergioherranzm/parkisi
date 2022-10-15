@@ -7,7 +7,7 @@ export const createSlot: FastifyPluginAsync = async (app) => {
   }>('/', async (request, reply) => {
     const newSlot = await SlotModel.create(JSON.parse(request.body));
 
-    console.log('NEW Slot created:', JSON.parse(request.body));
+    //console.log('NEW Slot created:', JSON.parse(request.body));
 
     return { slotId: newSlot._id };
   });

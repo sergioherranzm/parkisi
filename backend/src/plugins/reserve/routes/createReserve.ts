@@ -7,7 +7,7 @@ export const createReserve: FastifyPluginAsync = async (app) => {
   }>('/', async (request, reply) => {
     const newReserve = await ReserveModel.create(JSON.parse(request.body));
 
-    console.log('NEW reserve created:', JSON.parse(request.body));
+    //console.log('NEW reserve created:', JSON.parse(request.body));
 
     return {
       reserveId: newReserve._id,

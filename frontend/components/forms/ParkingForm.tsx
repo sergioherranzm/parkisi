@@ -58,11 +58,17 @@ export const ParkingForm = () => {
     setAddressReady('');
   }, [address, postal, city, province]);
 
+  {
+    /* eslint-disable */
+  }
   useEffect(() => {
     if (parkingData.owner) {
       makePost();
     }
   }, [parkingData]);
+  {
+    /* eslint-enable */
+  }
 
   const handle_submit1 = methods.handleSubmit(async (data) => {
     const url = `${MAPS_API_URL}/getCoords?address=${
@@ -99,12 +105,6 @@ export const ParkingForm = () => {
 
   return (
     <>
-      <button
-        tw="border bg-green-200 p-1 mx-5"
-        onClick={() => router.push(`/api/mailer/sendMailtest`)}
-      >
-        MAIL
-      </button>
       <div tw="flex-col py-6">
         <div>
           <FormInput

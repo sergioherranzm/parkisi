@@ -40,13 +40,17 @@ export const VehicleForm = () => {
       throw new Error('Vehicle creation failed');
     }
   };
-
+  {
+    /* eslint-disable */
+  }
   useEffect(() => {
     if (vehicleData.owner) {
       makePost();
     }
   }, [vehicleData]);
-
+  {
+    /* eslint-enable */
+  }
   const handle_submit = methods.handleSubmit(async (data) => {
     setVehicleData({
       type: data.type,

@@ -45,13 +45,17 @@ export const SlotForm = (props) => {
       throw new Error('Slot creation failed');
     }
   };
-
+  {
+    /* eslint-disable */
+  }
   useEffect(() => {
     if (slotData.parking) {
       makePost();
     }
   }, [slotData]);
-
+  {
+    /* eslint-enable */
+  }
   const handle_submit = methods.handleSubmit(async (data) => {
     setSlotData({
       identification: data.identification,

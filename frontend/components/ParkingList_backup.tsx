@@ -6,7 +6,6 @@ import { sizesMap } from '../types/sizesMap';
 import { StaticMap } from './maps/StaticMap';
 import { StaticDatePickerWidget } from './StaticDatePickerWidget';
 import LatLon from 'geodesy/latlon-spherical.js';
-import Map from './maps/Map';
 
 export const ParkingList: React.FC<{
   lat: string;
@@ -27,15 +26,12 @@ export const ParkingList: React.FC<{
   const { data: vehicle } = useSWR(`/vehicle/plate/${vehiclePlate}`);
 
   const [selectedParking, setSelectedParking] = useState(null);
-  const [centerMap, setCenterMap] = useState(null);
-  const [selectedMarker, setSelectedMarker] = useState('');
 
   let markers = parkings?.map((p, i) => {
     return {
       coordinates: p.location.coordinates,
-      color: '#671014',
+      color: 'red',
       label: (i + 1).toString(),
-      size: 30,
     };
   });
   //Add the selected address to the map
@@ -44,9 +40,8 @@ export const ParkingList: React.FC<{
   }
   markers?.push({
     coordinates: [lng, lat],
-    color: '#14560D',
+    color: 'purple',
     label: '',
-    size: 45,
   });
 
   return (
@@ -59,17 +54,7 @@ export const ParkingList: React.FC<{
                 <div
                   key={index + 1}
                   tw="border border-black shadow-lg p-3 rounded-lg bg-white cursor-pointer"
-                  onMouseOver={() => {
-                    setSelectedMarker((index + 1).toString());
-                    //console.log(index + 1);
-                  }}
-                  onClick={() => {
-                    setSelectedParking(parking);
-                    setCenterMap({
-                      lng: parseFloat(parking.location.coordinates[0]),
-                      lat: parseFloat(parking.location.coordinates[1]),
-                    });
-                  }}
+                  onClick={() => setSelectedParking(parking)}
                 >
                   <p tw="bg-red-600 text-white font-semibold rounded-full p-1 text-center">
                     {index + 1}
@@ -83,7 +68,7 @@ export const ParkingList: React.FC<{
                         parking.location.coordinates[1],
                         parking.location.coordinates[0]
                       ).distanceTo(currentPos) / 10
-                    ) / 100}
+                    ) / 100}{' '}
                     km
                   </p>
                 </div>
@@ -91,12 +76,7 @@ export const ParkingList: React.FC<{
             </div>
 
             <div>
-              <Map
-                initialCoords={{ lng: parseFloat(lng), lat: parseFloat(lat) }}
-                markers={markers}
-                center={centerMap}
-                markerSel={selectedMarker}
-              />
+              <StaticMap size="600x400" markers={markers} />
             </div>
           </div>
           {selectedParking && (

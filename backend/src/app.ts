@@ -9,7 +9,6 @@ import { parkingPlugin } from './plugins/parking';
 import { slotPlugin } from './plugins/slot';
 import { vehiclePlugin } from './plugins/vehicle';
 import { reservePlugin } from './plugins/reserve';
-import { getEmailByAuth0Id } from './utils/getEmailByAuth0Id';
 
 export const app: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.log.info('Server starting ...');
@@ -33,8 +32,38 @@ export const app: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.register(reservePlugin, { prefix: '/reserve' });
 
   app.get('/', async (request, reply) => {
-    //const user = request.user;
-    //const userEmail = await getEmailByAuth0Id(request.user.sub);
-    return { welcomeTo: 'PARKISI backend', userVisiting: request.user };
+    return {
+      welcomeTo: 'PARKISI backend',
+      currentTime: new Date(Date.now()).toLocaleString() + ' server local time',
+      endPoints: [
+        ['GET', '/'],
+        ['GET', '/userProfile/list'],
+        ['GET', '/userProfile/:auth0Id'],
+        ['GET', '/userProfile/detail/:userId'],
+        ['GET', '/parking/list/:auth0Id'],
+        ['GET', '/parking/address?lat&lng&limit&maxKm'],
+        ['GET', '/parking/detail/:parkingId'],
+        ['DELETE', '/parking/detail/:parkingId'],
+        ['POST', '/parking'],
+        ['GET', '/slot/detail/:slotId'],
+        ['DELETE', '/slot/detail/:slotId'],
+        ['GET', '/slot/list/:parkingId'],
+        ['DELETE', '/slot/list/:parkingId'],
+        ['POST', '/slot'],
+        ['GET', '/vehicle/list/:auth0Id'],
+        ['GET', '/vehicle/plate/:vehiclePlate'],
+        ['GET', '/vehicle/detail/:vehicleId'],
+        ['DELETE', '/vehicle/detail/:vehicleId'],
+        ['POST', '/vehicle'],
+        ['GET', '/reserve/list/user/:auth0Id'],
+        ['GET', '/reserve/detail/:reserveId'],
+        ['GET', '/reserve/list/slot/:slotId'],
+        ['DELETE', '/reserve/list/slot/:slotId'],
+        ['DELETE', '/reserve/list/parking/:parkingId'],
+        ['DELETE', '/reserve/detail/:reserveId'],
+        ['POST', '/reserve'],
+      ],
+      note: 'All endpoints but this one require authorization token',
+    };
   });
 };
