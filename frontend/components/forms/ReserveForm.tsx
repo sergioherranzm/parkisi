@@ -27,7 +27,7 @@ export const ReserveForm = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState<string[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState<string>('');
   const [addressReady, setAddressReady] = useState<string | undefined>();
-  const [isLimit, setIsLimit] = useState<number>();
+  const [isLimit, setIsLimit] = useState<number | number[]>();
 
   const address = watch('address');
   const vehicle = watch('vehicle');
@@ -209,7 +209,7 @@ export const ReserveForm = () => {
                 lng={selectedCoordinates[0]}
                 lat={selectedCoordinates[1]}
                 vehiclePlate={selectedVehicle}
-                limitShow={isLimit}
+                limitShow={isLimit as number}
               />
             </div>
           )}
