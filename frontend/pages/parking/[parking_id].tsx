@@ -189,7 +189,10 @@ const Page = () => {
                 />
               </div>
             </div>
-            <div tw="my-2 p-3 border border-primary-200 shadow-sm rounded-lg flex flex-col items-center">
+            <div
+              id="slots_container"
+              tw="my-2 p-3 border border-primary-200 shadow-sm rounded-lg flex flex-col items-center"
+            >
               <h4 tw="text-2xl text-center text-primary-400 font-bold">
                 Parking slots
               </h4>

@@ -21,7 +21,7 @@ const api_route: NextApiHandler = async (req, res) => {
     },
   });
 
-  console.log(data);
+  //console.log(data);
 };
 
 export default api_route;

@@ -49,7 +49,9 @@ export const SlotForm = (props) => {
       const url_mail = `${MAILER_URL}/sendMail?mailType=${mailType}&mailTo=${mailTo}&address=${address}&description=${description}&identification=${identification}&hyperlink=${hyperlink}`;
       const sendMailResponse: AxiosResponse = await axios.get(url_mail);
       //redirection
-      router.push(`/parking/${parkingId}?newSlot=${postResponse.data.slotId}`);
+      router.push(
+        `/parking/${parkingId}?newSlot=${postResponse.data.slotId}#slots_container`
+      );
     } else {
       throw new Error('Slot creation failed');
     }

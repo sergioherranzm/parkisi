@@ -11,17 +11,19 @@ import { BiCurrentLocation } from 'react-icons/bi';
 import Link from 'next/link';
 import { difficultyMap } from '../types/difficultyMap';
 import tw from 'twin.macro';
+import { valueToPercent } from '@mui/base';
 
 export const ParkingList: React.FC<{
   lat: string;
   lng: string;
   vehiclePlate: string;
+  limitShow: number;
 }> = (props) => {
-  const { lng, lat, vehiclePlate } = props;
+  const { lng, lat, vehiclePlate, limitShow } = props;
 
   const currentPos = new LatLon(lat, lng);
 
-  const limit = 3;
+  const limit = 10;
   const maxKm = 20;
 
   const { data: parkings } = useSWR(
@@ -32,15 +34,22 @@ export const ParkingList: React.FC<{
   const [selectedParking, setSelectedParking] = useState(null);
   const [centerMap, setCenterMap] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState('');
+  const [selectedCard, setSelectedCard] = useState('');
 
-  let markers = parkings?.map((p, i) => {
-    return {
-      coordinates: p.location.coordinates,
-      color: '#671014',
-      label: (i + 1).toString(),
-      size: 30,
-    };
-  });
+  let markers = parkings
+    ?.map((p, i) => {
+      if (i + 1 > limitShow) {
+        return false;
+      }
+      return {
+        coordinates: p.location.coordinates,
+        color: '#671014',
+        label: (i + 1).toString(),
+        size: 30,
+      };
+    })
+    .filter((v) => v);
+
   //Add the selected address to the map
   if (!markers) {
     markers = [];
@@ -64,13 +73,21 @@ export const ParkingList: React.FC<{
               {parkings.map((parking, index) => (
                 <motion.div
                   key={index + 1}
-                  tw="border border-primary-300 shadow-lg p-3 rounded-lg bg-primary-000 hover:border-secondary-300 hover:border-2"
+                  tw=""
+                  css={[
+                    tw`border-2 border-primary-300 shadow-lg p-3 rounded-lg bg-primary-000 hover:border-secondary-300 hover:border-2 hover:bg-primary-200 transition-colors`,
+                    index + 1 > limitShow && tw`hidden`,
+                    `${index + 1}` === selectedMarker &&
+                      tw`bg-primary-200 border-secondary-300 border-2`,
+                  ]}
                   style={{ zIndex: 0 }}
                   whileHover={{
                     scaleX: 1.08,
                     scaleY: 1.08,
                     transition: { duration: 0.3 },
                   }}
+                  onMouseEnter={() => setSelectedCard(`${index + 1}`)}
+                  onMouseLeave={() => setSelectedCard(``)}
                 >
                   <div tw="flex flex-col gap-3 justify-between">
                     <div tw="flex justify-between">
@@ -138,7 +155,8 @@ export const ParkingList: React.FC<{
                 initialCoords={{ lng: parseFloat(lng), lat: parseFloat(lat) }}
                 markers={markers}
                 center={centerMap}
-                markerSel={selectedMarker}
+                cardSel={selectedCard}
+                changeCardSelection={setSelectedMarker}
               />
             </div>
           </div>
@@ -172,7 +190,7 @@ export const ParkingList: React.FC<{
                       >
                         {slot.size < vehicle.size && (
                           <div tw="bg-red-600 px-1 rounded-md font-medium text-white absolute">
-                            Too small for your {vehicle.model}
+                            Maybe too small for your {vehicle.model}
                           </div>
                         )}
                         <div tw="mt-4 rounded-lg flex flex-col justify-center items-center gap-3">

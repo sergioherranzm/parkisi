@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { BiCurrentLocation } from 'react-icons/bi';
 import { Button } from '../shared/Button';
 import tw from 'twin.macro';
+import { Box, Slider } from '@mui/material';
 
 export const ReserveForm = () => {
   const methods = useForm({
@@ -26,13 +27,19 @@ export const ReserveForm = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState<string[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState<string>('');
   const [addressReady, setAddressReady] = useState<string | undefined>();
+  const [isLimit, setIsLimit] = useState<number>();
 
   const address = watch('address');
   const vehicle = watch('vehicle');
+  const limit = watch('limit');
 
   useEffect(() => {
     setSelectedVehicle(vehicle);
   }, [vehicle]);
+
+  useEffect(() => {
+    setIsLimit(limit);
+  }, [limit]);
 
   const getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
@@ -63,6 +70,7 @@ export const ReserveForm = () => {
         dataCoord.data.lat.toString(),
       ]);
       setSelectedVehicle(data.vehicle);
+      setIsLimit(data.limit);
       setAddressReady('OK');
     } else {
       setAddressReady('ERROR_ADDRESS');
@@ -80,29 +88,71 @@ export const ReserveForm = () => {
         <>
           <div tw="my-3 p-3 border border-primary-200 shadow-sm rounded-lg w-full">
             <FormProvider {...methods}>
-              <div>
-                <Controller
-                  defaultValue={userVehicles[0].plate}
-                  name="vehicle"
-                  control={methods.control}
-                  rules={{
-                    required: 'Select a vehicle',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <FormSelect
-                        name="vehicle"
-                        label="Select vehicle:"
-                        options={userVehicles.map((vehicle) => {
-                          return { label: vehicle.plate, value: vehicle.plate };
-                        })}
-                        {...field}
-                        error={fieldState?.error?.message}
-                      />
-                    );
-                  }}
-                />
+              <div tw="flex w-full justify-between align-bottom">
+                <div tw="w-full">
+                  <Controller
+                    defaultValue={userVehicles[0].plate}
+                    name="vehicle"
+                    control={methods.control}
+                    rules={{
+                      required: 'Select a vehicle',
+                    }}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <FormSelect
+                          name="vehicle"
+                          label="Select vehicle:"
+                          options={userVehicles.map((vehicle) => {
+                            return {
+                              label: vehicle.plate,
+                              value: vehicle.plate,
+                            };
+                          })}
+                          {...field}
+                          error={fieldState?.error?.message}
+                        />
+                      );
+                    }}
+                  />
+                </div>
+                <div tw="w-full px-10">
+                  <label
+                    htmlFor="limit"
+                    tw="p-1 first:font-bold text-primary-400"
+                  >
+                    Number of parkings:
+                  </label>
+                  <Controller
+                    defaultValue={3}
+                    name="limit"
+                    control={methods.control}
+                    rules={{
+                      required: 'Select a number of parkings to display',
+                    }}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <Slider
+                            name="limit"
+                            aria-label="Number of parkings"
+                            valueLabelDisplay="auto"
+                            step={1}
+                            marks
+                            min={1}
+                            max={10}
+                            color="primary"
+                            onChangeCommitted={(e, val) => {
+                              setIsLimit(val);
+                            }}
+                            {...field}
+                          />
+                        </>
+                      );
+                    }}
+                  />
+                </div>
               </div>
+
               {addressReady !== 'OK' && (
                 <>
                   <div tw="my-3 flex gap-3">
@@ -159,6 +209,7 @@ export const ReserveForm = () => {
                 lng={selectedCoordinates[0]}
                 lat={selectedCoordinates[1]}
                 vehiclePlate={selectedVehicle}
+                limitShow={isLimit}
               />
             </div>
           )}

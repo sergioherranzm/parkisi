@@ -89,7 +89,7 @@ const Page = (props) => {
                   <>
                     {slot.size < vehicle?.size && (
                       <div tw="bg-red-600 px-1 rounded-md font-medium text-white absolute">
-                        Too small for your {vehicle.model}
+                        Maybe too small for your {vehicle.model}
                       </div>
                     )}
                   </>
