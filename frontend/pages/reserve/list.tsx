@@ -1,6 +1,11 @@
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
+import { Button } from '../../components/shared/Button';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Alert } from '@mui/material';
 
 const Page = () => {
   const router = useRouter();
@@ -13,48 +18,85 @@ const Page = () => {
   );
 
   return (
-    <>
-      <div tw=" mx-auto ">
-        <h1 tw="text-4xl font-extrabold">MY RESERVES</h1>
+    <AnimatePresence>
+      <div tw="p-3 rounded-b-lg bg-white">
+        <h1 tw="text-5xl font-extrabold mb-3">
+          <p tw="text-primary-400 inline">My </p>
+          <p tw="text-secondary-300 inline">reserves</p>
+        </h1>
         {newReserve && (
-          <div tw="text-green-500 bg-green-300">New reserve created</div>
+          <Alert tw="my-2" severity="info">
+            New reserve added
+          </Alert>
         )}
         {deleteReserve && (
-          <div tw="text-green-500 bg-green-300">Reserve deleted</div>
+          <Alert tw="my-2" severity="error">
+            Reserve deleted
+          </Alert>
+        )}
+
+        {myReserves?.length > 0 && (
+          <div tw="my-2 p-3 border border-primary-200 shadow-sm rounded-lg grid grid-cols-1 gap-x-4 gap-y-6">
+            {myReserves.map((reserve) => (
+              <motion.div
+                key={reserve._id}
+                tw="border bg-white border-primary-100 shadow-2xl p-3 rounded-lg flex flex-col justify-between w-full hover:ring-4 ring-secondary-300"
+                style={{ zIndex: 0 }}
+                whileHover={{
+                  scaleX: 1.02,
+                  scaleY: 1.02,
+                  transition: { duration: 0.3 },
+                }}
+              >
+                <div>
+                  <div tw="flex gap-3">
+                    <h4 tw="text-2xl text-primary-400 font-semibold">
+                      {reserve.slot?.parking?.street},{' '}
+                      {reserve.slot?.parking?.streetNumber}
+                    </h4>
+                    {newReserve === reserve._id && (
+                      <div tw="bg-secondary-200 text-primary-500 px-1 pt-1 text-xl rounded-md font-semibold max-w-max">
+                        NEW
+                      </div>
+                    )}
+                  </div>
+
+                  <p tw="text-gray-500">{reserve.slot?.parking?.city}</p>
+                </div>
+                <div>
+                  <div tw="my-2">
+                    <p tw="text-primary-500 inline">From </p>
+                    <p tw="text-secondary-400 text-lg font-medium inline">
+                      {reserve.period[0]}
+                    </p>
+                    <p tw="text-primary-500 inline"> to </p>
+                    <p tw="text-secondary-400 text-lg font-medium inline">
+                      {reserve.period[reserve.period.length - 1]}
+                    </p>
+                  </div>
+                  <Link href={`/reserve/${reserve._id}`}>
+                    <Button variant="neutral">View</Button>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {!myReserves?.length && (
+          <div tw="text-secondary-400 font-medium my-3">
+            You have no reserves yet
+          </div>
         )}
         <div tw="my-2">
-          {myReserves?.length > 0 &&
-            myReserves.map((reserve) => (
-              <div
-                key={reserve._id}
-                tw="border border-black shadow-lg p-3 rounded-lg bg-white my-1"
-              >
-                {newReserve === reserve._id && (
-                  <div tw="text-green-500 bg-green-300">NEW</div>
-                )}
-                <h4 tw="text-2xl">Parking on {reserve.slot.parking.address}</h4>
-                <p>
-                  Period: from {reserve.period[0]} to{' '}
-                  {reserve.period[reserve.period.length - 1]}
-                </p>
-                <button
-                  tw="border border-black bg-gray-300"
-                  onClick={() => router.push(`/reserve/${reserve._id}`)}
-                >
-                  Open
-                </button>
-              </div>
-            ))}
-          {!myReserves?.length && <p>You have no reserves yet</p>}
+          <Link href={`/reserve/create`}>
+            <Button icon={<AiOutlinePlus />} variant="submit">
+              New reserve
+            </Button>
+          </Link>
         </div>
       </div>
-      <button
-        tw="border border-black bg-gray-300 p-5 text-xl"
-        onClick={() => router.push('/reserve/create')}
-      >
-        Add new reserve
-      </button>
-    </>
+    </AnimatePresence>
   );
 };
 

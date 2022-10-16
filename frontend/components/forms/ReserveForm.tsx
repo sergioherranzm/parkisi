@@ -7,6 +7,10 @@ import { ParkingList } from '../ParkingList';
 import useSWR from 'swr';
 import { useUser } from '@auth0/nextjs-auth0';
 import { FormInput } from './form_widgets/FormInput';
+import Link from 'next/link';
+import { BiCurrentLocation } from 'react-icons/bi';
+import { Button } from '../shared/Button';
+import tw from 'twin.macro';
 
 export const ReserveForm = () => {
   const methods = useForm({
@@ -38,7 +42,7 @@ export const ReserveForm = () => {
           geopos.coords.latitude.toString(),
         ]);
         //------------------------------------------------------------------------------------------------------------------------------------------------
-        setSelectedCoordinates(['-3.703206', '40.420133']); //***PLEASE DELETE*** This line is just to hide my real location when presenting the project.
+        setSelectedCoordinates(['-3.684771', '40.469208']); //***PLEASE DELETE*** This line is just to hide my real location when presenting the project.
         //------------------------------------------------------------------------------------------------------------------------------------------------
         setSelectedVehicle(vehicle);
         setAddressReady('OK');
@@ -61,11 +65,12 @@ export const ReserveForm = () => {
       setSelectedVehicle(data.vehicle);
       setAddressReady('OK');
     } else {
-      setAddressReady('ERROR_ADRESS');
+      setAddressReady('ERROR_ADDRESS');
     }
   });
 
   const clear_address = () => {
+    //methods.setValue('address', '');
     setAddressReady(undefined);
   };
 
@@ -73,8 +78,8 @@ export const ReserveForm = () => {
     <>
       {userVehicles?.length > 0 && (
         <>
-          <FormProvider {...methods}>
-            <div tw="flex-col py-6 gap-2">
+          <div tw="my-3 p-3 border border-primary-200 shadow-sm rounded-lg w-full">
+            <FormProvider {...methods}>
               <div>
                 <Controller
                   defaultValue={userVehicles[0].plate}
@@ -100,66 +105,81 @@ export const ReserveForm = () => {
               </div>
               {addressReady !== 'OK' && (
                 <>
-                  <div tw="flex">
-                    <button
-                      tw="border bg-yellow-200 p-1 m-2"
+                  <div tw="my-3 flex gap-3">
+                    <div
+                      tw="py-2 px-3 bg-gray-100 border border-primary-100 rounded-lg flex justify-center items-center text-primary-400"
                       onClick={() => getCurrentPosition()}
                     >
-                      Detect my position
-                    </button>
+                      <BiCurrentLocation size={30} />
+                    </div>
+
                     <FormInput
                       label="Insert an address:"
+                      placeholder="Street, street number, locality, province, postal code"
                       error={formState.errors.address?.message.toString()}
                       {...methods.register('address', {
                         required: 'An address is required',
                       })}
                     />
                   </div>
-                  <button
-                    tw="border bg-green-200 p-1 my-2"
-                    onClick={() => handle_submit()}
-                  >
-                    View available parkings
-                  </button>
+                  <div tw="mt-3 flex gap-3">
+                    <Button variant="submit" onClick={() => handle_submit()}>
+                      Look for parkings
+                    </Button>
+                    {addressReady === 'ERROR_ADDRESS' && (
+                      <p tw="text-secondary-400 font-bold text-lg pt-1">
+                        Address not found. Please try a more specific address.
+                      </p>
+                    )}
+                    {addressReady === 'ERROR_GEOPOS' && (
+                      <p tw="text-secondary-400 font-bold text-lg pt-1">
+                        We cannot detect current position. Please check your
+                        browser permissions.
+                      </p>
+                    )}
+                  </div>
                 </>
               )}
               {addressReady === 'OK' && (
-                <>
-                  <button
-                    tw="border bg-yellow-200 p-1 my-2"
-                    onClick={() => clear_address()}
-                  >
-                    Clear address selection
-                  </button>
-                </>
+                <div tw="mt-3">
+                  <Button variant="neutral" onClick={() => clear_address()}>
+                    Change address
+                  </Button>
+                </div>
               )}
+            </FormProvider>
+          </div>
+
+          {addressReady === 'OK' && (
+            <div
+              tw="my-3 p-3 border border-primary-200 shadow-sm rounded-lg w-full"
+              style={{ scrollBehavior: 'smooth' }}
+            >
+              <ParkingList
+                lng={selectedCoordinates[0]}
+                lat={selectedCoordinates[1]}
+                vehiclePlate={selectedVehicle}
+              />
             </div>
-            {addressReady === 'ERROR_ADDRESS' && (
-              <p tw="text-red-600 font-bold text-lg">Address not found</p>
-            )}
-            {addressReady === 'ERROR_GEOPOS' && (
-              <p tw="text-red-600 font-bold text-lg">
-                We cannot detect current position. Please check your browser
-                permissions.
-              </p>
-            )}
-            {addressReady === 'OK' && (
-              <>
-                <h2 tw="text-2xl">Pakings near the selected address:</h2>
-                <ParkingList
-                  lng={selectedCoordinates[0]}
-                  lat={selectedCoordinates[1]}
-                  vehiclePlate={selectedVehicle}
-                />
-              </>
-            )}
-          </FormProvider>
+          )}
         </>
       )}
       {userVehicles?.length === 0 && (
-        <div>
-          Please register a vehicle in your user profile to do a reserve.
-        </div>
+        <>
+          <div tw="text-secondary-400 font-medium my-3">
+            User`s vehicles not found
+          </div>
+          <div tw="text-secondary-400 font-medium my-3">
+            <p tw="inline">Please register a vehicle in </p>
+            <Link href={'/user/myProfile'}>
+              <p tw="inline cursor-pointer underline hover:text-primary-200">
+                your user profile
+              </p>
+            </Link>
+
+            <p tw="inline"> to look for parkings</p>
+          </div>
+        </>
       )}
     </>
   );

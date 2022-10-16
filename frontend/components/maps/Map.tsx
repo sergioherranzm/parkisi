@@ -62,34 +62,32 @@ const Map = ({ center, initialCoords, markers, markerSel }) => {
   }, [markerSel]);
 
   return (
-    <div style={{ height: '700px', width: '50em' }}>
-      <GoogleMapReact
-        bootstrapURLKeys={{ key: GOOGLE_API_KEY }}
-        defaultCenter={initialCoords}
-        center={cordinates}
-        defaultZoom={12}
-        onChildMouseEnter={(child) => {
-          setSelectedMarker(markers[child].label);
-        }}
-        onChildClick={(child) => {
-          setCardData(markers[child]);
-        }}
-      >
-        {markers.map((marker, i) => {
-          return (
-            <Marker
-              key={i}
-              lat={parseFloat(marker.coordinates[1])}
-              lng={parseFloat(marker.coordinates[0])}
-              label={marker.label}
-              color={marker.color}
-              size={marker.size}
-              isSelected={selectedMarker === marker.label}
-            />
-          );
-        })}
-      </GoogleMapReact>
-    </div>
+    <GoogleMapReact
+      bootstrapURLKeys={{ key: GOOGLE_API_KEY }}
+      defaultCenter={initialCoords}
+      center={cordinates}
+      defaultZoom={12}
+      onChildMouseEnter={(child) => {
+        setSelectedMarker(markers[child].label);
+      }}
+      onChildClick={(child) => {
+        setCardData(markers[child]);
+      }}
+    >
+      {markers.map((marker, i) => {
+        return (
+          <Marker
+            key={i}
+            lat={parseFloat(marker.coordinates[1])}
+            lng={parseFloat(marker.coordinates[0])}
+            label={marker.label}
+            color={marker.color}
+            size={marker.size}
+            isSelected={selectedMarker === marker.label}
+          />
+        );
+      })}
+    </GoogleMapReact>
   );
 };
 

@@ -3179,6 +3179,11 @@ react-promise@2.0.0:
   dependencies:
     prop-types "^15.6.0"
 
+react-spinners@^0.13.6:
+  version "0.13.6"
+  resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.13.6.tgz#f97df4f7fedea7a496b391cf952761e13256610b"
+  integrity sha512-+VoSs1wN6oMhJy7PzCPiHUt6zUi9fvnGQizem8q/NzXhGovbdXFDWNhspk6KEKXQEafInUtpvtDlp/zJ5sES/A==
+
 react-static-google-map@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/react-static-google-map/-/react-static-google-map-0.9.0.tgz#1ab33ea8c7ef3a2cd322ec60dc0a0d9f0ea3f0f3"

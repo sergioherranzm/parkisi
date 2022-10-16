@@ -1,5 +1,6 @@
 export interface IParking {
-  address?: string;
+  street?: string;
+  streetNumber?: string;
   postalCode?: string;
   city?: string;
   province?: string;

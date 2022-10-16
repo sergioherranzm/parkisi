@@ -1,4 +1,5 @@
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import Carousel from 'react-material-ui-carousel';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,12 +7,21 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios, { AxiosResponse } from 'axios';
+import { Button as MyButton } from '../../components/shared/Button';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import useSWR from 'swr';
 import { StaticMap } from '../../components/maps/StaticMap';
 import { FRONT_URL, MAILER_URL, PROXY_URL } from '../../lib/config';
+import { AnimatePresence } from 'framer-motion';
+import { GridLoader } from 'react-spinners';
+import { Alert } from '@mui/material';
+import Link from 'next/link';
+import { StaticDatePickerWidget } from '../../components/StaticDatePickerWidget';
+import { difficultyMap } from '../../types/difficultyMap';
 import { sizesMap } from '../../types/sizesMap';
+import tw from 'twin.macro';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 const Page = () => {
   const router = useRouter();
@@ -72,61 +82,100 @@ const Page = () => {
   };
 
   return (
-    <>
-      <div tw=" mx-auto ">
-        <h1 tw="text-4xl font-extrabold">PARKING DETAIL</h1>
-        {newSlot && (
-          <div tw="text-green-500 bg-green-300">New slot created</div>
-        )}
-        {deleteSlot && <div tw="text-green-500 bg-green-300">Slot deleted</div>}
-        <div tw="my-2">
-          {parking && (
-            <div tw=" p-3 rounded-lg bg-white">
-              <h4 tw="text-4xl inline">Parking on {parking.address} street</h4>
-              {isOwner && (
-                <>
-                  <button
-                    tw="border border-black bg-red-400 p-1 m-2"
-                    onClick={handleClickOpen}
-                  >
-                    Remove parking
-                  </button>
-                  <Dialog
-                    open={openDialog}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                  >
-                    <DialogTitle sx={{ m: 0, p: 5 }} id="alert-dialog-title">
-                      {'Do you really want to delete this parking?'}
-                      <IconButton
-                        aria-label="close"
-                        onClick={handleClose}
-                        sx={{
-                          position: 'absolute',
-                          right: 8,
-                          top: 8,
-                          color: (theme) => theme.palette.grey[500],
-                        }}
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </DialogTitle>
+    <AnimatePresence>
+      <div tw="p-3 rounded-b-lg bg-white">
+        {parking && (
+          <div tw=" p-3 rounded-lg">
+            <h1 tw="text-5xl font-extrabold mb-3">
+              <p tw="text-primary-400 inline">Parking </p>
+              <p tw="text-secondary-300 inline">
+                {parking.street}, {parking.streetNumber}
+              </p>
+            </h1>
+            {newSlot && (
+              <Alert tw="my-2" severity="info">
+                New slot created
+              </Alert>
+            )}
+            {deleteSlot && (
+              <Alert tw="my-2" severity="error">
+                Slot deleted
+              </Alert>
+            )}
 
-                    <DialogActions>
-                      <Button onClick={handleClose}>Cancel</Button>
-                      <Button
-                        sx={{ color: '#ff0000' }}
-                        onClick={delete_parking}
-                        autoFocus
-                      >
-                        Delete
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </>
-              )}
-              <p tw="text-gray-500">{parking.description}</p>
-              <div>
+            <div tw="my-2 p-3 border border-primary-200 shadow-sm rounded-lg flex justify-between">
+              <div tw="flex flex-col justify-between gap-3">
+                <div tw="flex flex-col h-full">
+                  <div tw="">
+                    <p tw="text-secondary-300 font-semibold text-4xl">
+                      {parking.street}, {parking.streetNumber}
+                    </p>
+                    <p tw="text-primary-400 font-semibold text-2xl">
+                      {parking.city}
+                    </p>
+                    <div tw="flex">
+                      <p tw="text-primary-300 text-2xl">{parking.province}</p>
+                      <p tw="text-primary-300 text-2xl">
+                        &nbsp;
+                        {parking.postalCode}
+                      </p>
+                    </div>
+                  </div>
+                  <div tw="">
+                    <p tw="text-gray-500 italic text-xl">
+                      {parking.description}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <p tw="text-primary-400 font-normal text-2xl inline">
+                    Number of parking slots:{' '}
+                  </p>
+                  <p tw="text-secondary-300 font-semibold text-2xl inline">
+                    {parking?.slots.length}
+                  </p>
+                </div>
+                {isOwner && (
+                  <div tw="">
+                    <MyButton variant={'delete'} onClick={handleClickOpen}>
+                      Delete parking
+                    </MyButton>
+                    <Dialog
+                      open={openDialog}
+                      onClose={handleClose}
+                      aria-labelledby="alert-dialog-title"
+                    >
+                      <DialogTitle sx={{ m: 0, p: 5 }} id="alert-dialog-title">
+                        {'Do you really want to delete this parking?'}
+                        <IconButton
+                          aria-label="close"
+                          onClick={handleClose}
+                          sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                          }}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      </DialogTitle>
+
+                      <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button
+                          sx={{ color: '#ff0000' }}
+                          onClick={delete_parking}
+                          autoFocus
+                        >
+                          Delete
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+                )}
+              </div>
+              <div tw="min-w-max">
                 <StaticMap
                   size="400x300"
                   zoom={17}
@@ -139,51 +188,125 @@ const Page = () => {
                   ]}
                 />
               </div>
+            </div>
+            <div tw="my-2 p-3 border border-primary-200 shadow-sm rounded-lg flex flex-col items-center">
+              <h4 tw="text-2xl text-center text-primary-400 font-bold">
+                Parking slots
+              </h4>
               {parking.slots?.length > 0 && (
-                <>
-                  <div tw="text-lg mt-5">SLOTS</div>
-                  <div tw="flex">
+                <div tw="w-1/2 my-2" style={{ minWidth: 'fit-content' }}>
+                  <Carousel
+                    autoPlay={false}
+                    stopAutoPlayOnHover={true}
+                    interval={3000}
+                    animation="fade"
+                    cycleNavigation={true}
+                    navButtonsAlwaysVisible={true}
+                    navButtonsWrapperProps={{ style: { margin: '0 0px' } }}
+                    sx={{ height: '100%' }}
+                  >
                     {parking.slots.map((slot) => (
-                      <div key={slot._id} tw="border p-1">
+                      <div
+                        key={slot._id}
+                        tw="my-2 p-3 border bg-primary-000 border-primary-200 shadow-sm rounded-lg flex flex-col gap-3 min-w-max"
+                      >
                         {newSlot === slot._id && (
-                          <div tw="text-green-500 bg-green-300">NEW</div>
+                          <div tw="bg-secondary-200 text-primary-500 px-1 rounded-md font-semibold max-w-max absolute text-xl">
+                            NEW
+                          </div>
                         )}
-                        <h3>Slot {slot.identification}</h3>
-                        <p>Size: {sizesMap[slot?.size]}</p>
-                        <p>Parking difficulty: {slot.difficulty}</p>
-                        <p>Price: {slot.price}€/day</p>
-                        <button
-                          tw="border border-black bg-gray-300 p-1"
-                          onClick={() => router.push(`/slot/${slot._id}`)}
-                        >
-                          Select
-                        </button>
+                        <div tw="rounded-lg flex flex-col justify-center items-center gap-3">
+                          <div tw="text-secondary-400 font-bold text-center text-6xl">
+                            Slot {slot.identification}
+                          </div>
+                          <div tw="text-primary-400 text-center font-medium text-3xl flex">
+                            <div
+                              css={[
+                                tw`max-w-min p-1 border-4 border-transparent`,
+                                slot.size.toString() === '1' &&
+                                  tw`border-secondary-300 text-secondary-300 font-extrabold`,
+                              ]}
+                            >
+                              S
+                            </div>
+                            <div
+                              css={[
+                                tw`max-w-min p-1 border-4 border-transparent`,
+                                slot.size.toString() === '2' &&
+                                  tw`border-secondary-300 text-secondary-300 font-extrabold`,
+                              ]}
+                            >
+                              M
+                            </div>
+                            <div
+                              css={[
+                                tw`max-w-min p-1 border-4 border-transparent`,
+                                slot.size.toString() === '3' &&
+                                  tw`border-secondary-300 text-secondary-300 font-extrabold`,
+                              ]}
+                            >
+                              L
+                            </div>
+                          </div>
+                          <div tw=" text-center text-2xl">
+                            <p tw="text-secondary-300 inline font-bold">
+                              {difficultyMap[slot.difficulty]}
+                            </p>
+                            <p tw="text-primary-300 inline font-normal">
+                              {' '}
+                              to park
+                            </p>
+                          </div>
+                          <div tw="text-center text-2xl">
+                            <p tw="text-secondary-300 inline font-bold">
+                              {slot.price?.toString().replace('.', ',')}
+                            </p>
+                            <p tw="text-primary-300 inline font-normal">
+                              {' '}
+                              €/day
+                            </p>
+                          </div>
+                        </div>
+                        <div tw="flex justify-center">
+                          <Link href={`/slot/${slot._id}`}>
+                            <MyButton variant="neutral">View</MyButton>
+                          </Link>
+                        </div>
+                        <div tw="my-2 w-full flex justify-center items-center">
+                          <div tw="border-4 border-primary-200 rounded-md max-w-max">
+                            <StaticDatePickerWidget slotId={slot._id} />
+                          </div>
+                        </div>
                       </div>
                     ))}
-                  </div>
-                </>
+                  </Carousel>
+                </div>
               )}
               {parking.slots?.length === 0 && (
-                <div tw="text-lg mt-5">
+                <div tw="text-secondary-400 font-medium my-3">
                   This parking has no parking slots yet
                 </div>
               )}
               {isOwner && (
-                <button
-                  tw="border border-black bg-gray-300 p-3 text-xl"
-                  onClick={() =>
-                    router.push(`/slot/create?parkingId=${parking_id}`)
-                  }
-                >
-                  Add new parking slot
-                </button>
+                <div tw="my-2">
+                  <Link href={`/slot/create?parkingId=${parking_id}`}>
+                    <MyButton icon={<AiOutlinePlus />} variant="submit">
+                      New slot
+                    </MyButton>
+                  </Link>
+                </div>
               )}
             </div>
-          )}
-          {!parking && <p>Parking not found</p>}
-        </div>
+          </div>
+        )}
+        {!parking && (
+          <div tw="flex flex-col justify-center items-center gap-2">
+            <div tw="text-primary-400 text-3xl font-bold">LOADING</div>
+            <GridLoader color={'#14560D'} size={15} />
+          </div>
+        )}
       </div>
-    </>
+    </AnimatePresence>
   );
 };
 

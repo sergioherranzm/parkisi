@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import { FRONT_URL, MAILER_URL, PROXY_URL } from '../../lib/config';
+import { PROXY_URL } from '../../lib/config';
 import { IVehicle } from '../../types/IVehicle';
 import { Button } from '../shared/Button';
 import { CarSmall } from '../shared/CarSmall';
@@ -17,16 +17,32 @@ import { MotorbikeSmall } from '../shared/MotorbikeSmall';
 import { MotorbikeMedium } from '../shared/MotorbikeMedium';
 import { MotorbikeLarge } from '../shared/MotorbikeLarge';
 import { OtherVehicle } from '../shared/OtherVehicle';
+import { Alert } from '@mui/material';
 
-export const VehicleForm = () => {
+export const VehicleFormUpdate = () => {
   const router = useRouter();
+  const {
+    query: { vehicle_id },
+  } = router;
 
   const { user } = useUser();
   const { data: userProfile } = useSWR(
     user?.sub ? `/userProfile/${user?.sub}` : null
   );
 
-  const methods = useForm();
+  const { data: vehicle } = useSWR(
+    vehicle_id ? `/vehicle/detail/${vehicle_id}` : null
+  );
+
+  const methods = useForm({
+    mode: 'onSubmit',
+    defaultValues: {
+      type: vehicle?.type,
+      size: vehicle?.size.toString(),
+      model: vehicle?.model,
+      plate: vehicle?.plate,
+    },
+  });
   const { formState, watch } = methods;
 
   const plateData = watch('plate');
@@ -35,23 +51,17 @@ export const VehicleForm = () => {
   const sizeData = watch('size');
 
   const [vehicleData, setVehicleData] = useState<IVehicle>({});
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
   const makePost = async () => {
-    const url = `${PROXY_URL}/vehicle`;
+    const url = `${PROXY_URL}/vehicle/detail/${vehicle?._id}`;
     const postResponse: AxiosResponse = await axios.post(url, vehicleData);
     if (postResponse.status === 200) {
-      //send mail
-      const mailType = 'vehicleCreation';
-      const mailTo = userProfile.email;
-      const model = vehicleData.model;
-      const plate = vehicleData.plate;
-      const hyperlink = `${FRONT_URL}user/myProfile`;
-      const url_mail = `${MAILER_URL}/sendMail?mailType=${mailType}&mailTo=${mailTo}&model=${model}&plate=${plate}&hyperlink=${hyperlink}`;
-      const sendMailResponse: AxiosResponse = await axios.get(url_mail);
-      //redirection
-      router.push(`/user/myProfile?newVehicle=${postResponse.data.vehicleId}`);
+      // Send mail to user
+      // Aler user
+      setIsUpdated(true);
     } else {
-      throw new Error('Vehicle creation failed');
+      throw new Error('Vehicle update failed');
     }
   };
   {
@@ -78,10 +88,15 @@ export const VehicleForm = () => {
   return (
     <div tw="w-full flex gap-3">
       <div tw="my-2 p-3 border border-primary-200 shadow-sm rounded-lg w-full">
+        {isUpdated && (
+          <Alert tw="my-2" severity="info">
+            Profile updated!
+          </Alert>
+        )}
         <div tw="flex gap-5 w-full my-1">
           <div tw="w-1/2">
             <Controller
-              defaultValue={'car'}
+              defaultValue={vehicle?.type}
               name="type"
               control={methods.control}
               rules={{
@@ -106,7 +121,7 @@ export const VehicleForm = () => {
           </div>
           <div tw="w-1/2">
             <Controller
-              defaultValue={'1'}
+              defaultValue={vehicle?.size.toString()}
               name="size"
               control={methods.control}
               rules={{
@@ -137,6 +152,7 @@ export const VehicleForm = () => {
             placeholder="Audi A3 blue"
             error={formState.errors.model?.message.toString()}
             {...methods.register('model', {
+              value: vehicle?.model,
               required: 'Model is required',
               minLength: {
                 value: 4,
@@ -151,6 +167,7 @@ export const VehicleForm = () => {
             placeholder="1234ABC"
             error={formState.errors.plate?.message.toString()}
             {...methods.register('plate', {
+              value: vehicle?.plate,
               required: 'Plate number is required',
               minLength: {
                 value: 7,
@@ -235,7 +252,7 @@ export const VehicleForm = () => {
         </div>
         <div tw="mt-3 flex justify-center">
           <Button variant="submit" onClick={() => handle_submit()}>
-            Create vehicle
+            Update vehicle
           </Button>
         </div>
       </div>
