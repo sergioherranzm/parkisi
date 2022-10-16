@@ -30,7 +30,8 @@ const api_route: NextApiHandler = async (req, res) => {
   Geocode.fromLatLng(lat, lng).then(
     (response) => {
       const address = response.results[0].formatted_address;
-      let street, city, state, country, postal;
+
+      let street, streetNumber, city, state, country, postal;
       for (let i = 0; i < response.results[0].address_components.length; i++) {
         for (
           let j = 0;
@@ -41,10 +42,14 @@ const api_route: NextApiHandler = async (req, res) => {
             case 'route':
               street = response.results[0].address_components[i].long_name;
               break;
+            case 'street_number':
+              streetNumber =
+                response.results[0].address_components[i].long_name;
+              break;
             case 'locality':
               city = response.results[0].address_components[i].long_name;
               break;
-            case 'administrative_area_level_1':
+            case 'administrative_area_level_2':
               state = response.results[0].address_components[i].long_name;
               break;
             case 'country':
@@ -56,10 +61,11 @@ const api_route: NextApiHandler = async (req, res) => {
           }
         }
       }
-      res.json({ address, street, postal, city, state, country });
+      res.json({ address, street, streetNumber, postal, city, state, country });
     },
     (error) => {
-      console.error(error);
+      console.error('ERROR retrieving address from coordinates:', error);
+      res.json({ error: error.toString() });
     }
   );
 };

@@ -6,13 +6,19 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios, { AxiosResponse } from 'axios';
+import { Button as MyButton } from '../../components/shared/Button';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { CheckoutSlotForm } from '../../components/forms/CheckoutSlotForm';
 import { StaticDatePickerWidget } from '../../components/StaticDatePickerWidget';
 import { FRONT_URL, MAILER_URL, PROXY_URL } from '../../lib/config';
-import { sizesMap } from '../../types/sizesMap';
 import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { GridLoader } from 'react-spinners';
+import Link from 'next/link';
+import { IoChevronBack } from 'react-icons/io5';
+import tw from 'twin.macro';
+import { difficultyMap } from '../../types/difficultyMap';
 
 const Page = (props) => {
   const router = useRouter();
@@ -26,6 +32,8 @@ const Page = (props) => {
   const { data: userProfile } = useSWR(
     user?.sub ? `/userProfile/${user?.sub}` : null
   );
+
+  const { data: vehicle } = useSWR(`/vehicle/detail/${vehicleId}`);
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -65,86 +73,174 @@ const Page = (props) => {
   };
 
   return (
-    <>
-      <div tw=" mx-auto ">
-        <button
-          tw="border border-black bg-gray-300 p-1"
-          onClick={() => router.push(`/parking/${slot.parking._id}`)}
-        >
-          Back
-        </button>
-        <h1 tw="text-4xl font-extrabold">SLOT DETAIL</h1>
-        <div tw="my-2">
-          {slot && (
-            <div tw=" p-3 rounded-lg bg-white">
-              <h4 tw="text-4xl inline">Slot {slot.identification}</h4>
-              {isOwner && (
-                <>
-                  <button
-                    tw="border border-black bg-red-400 p-1 m-2"
-                    onClick={handleClickOpen}
-                  >
-                    Remove slot
-                  </button>
-                  <p>You are the owner of this parking</p>
-                  <Dialog
-                    open={openDialog}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                  >
-                    <DialogTitle sx={{ m: 0, p: 5 }} id="alert-dialog-title">
-                      {'Do you really want to delete this parking slot?'}
-                      <IconButton
-                        aria-label="close"
-                        onClick={handleClose}
-                        sx={{
-                          position: 'absolute',
-                          right: 8,
-                          top: 8,
-                          color: (theme) => theme.palette.grey[500],
-                        }}
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </DialogTitle>
+    <AnimatePresence>
+      <div tw="p-3 rounded-b-lg bg-white">
+        {slot && (
+          <div tw="flex flex-col items-center">
+            <div>
+              <Link href={`/parking/${slot?.parking._id}`}>
+                <MyButton variant="neutral" icon={<IoChevronBack size={18} />}>
+                  View parking
+                </MyButton>
+              </Link>
 
-                    <DialogActions>
-                      <Button onClick={handleClose}>Cancel</Button>
-                      <Button
-                        sx={{ color: '#ff0000' }}
-                        onClick={delete_slot}
-                        autoFocus
-                      >
-                        Delete
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </>
-              )}
-              <p tw="text-gray-500">Situated on {slot?.parking?.address}</p>
-              <p>Size: {sizesMap[slot?.size]}</p>
-              <p>Parking difficulty: {slot?.difficulty}</p>
-              <p>Price: {slot?.price}€/day</p>
-              {isOwner && (
-                <div tw="border">
-                  <div tw="text-lg my-5">AVAILABILITY:</div>
-                  <StaticDatePickerWidget slotId={slot._id} />
-                </div>
-              )}
-              {!isOwner && vehicleId && (
-                <>
-                  <div tw="">
-                    <div tw="text-lg">RESERVE PERIOD:</div>
-                    <CheckoutSlotForm vehicleId={vehicleId} slotId={slot._id} />
+              <div tw="my-2 p-3 border bg-primary-000 border-primary-200 shadow-sm rounded-lg flex flex-col gap-3 max-w-max">
+                {!isOwner && vehicleId && (
+                  <>
+                    {slot.size < vehicle?.size && (
+                      <div tw="bg-red-600 px-1 rounded-md font-medium text-white absolute">
+                        Maybe too small for your {vehicle.model}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                <div tw="my-4 rounded-lg flex flex-col justify-center items-center gap-3">
+                  <div tw="text-secondary-400 font-bold text-center text-6xl">
+                    Slot {slot.identification}
                   </div>
-                </>
-              )}
+                  <div tw="text-primary-400 text-center font-medium text-3xl flex">
+                    <div
+                      css={[
+                        tw`max-w-min p-1 border-4 border-transparent`,
+                        slot.size.toString() === '1' &&
+                          tw`border-secondary-300 text-secondary-300 font-extrabold`,
+                      ]}
+                    >
+                      S
+                    </div>
+                    <div
+                      css={[
+                        tw`max-w-min p-1 border-4 border-transparent`,
+                        slot.size.toString() === '2' &&
+                          tw`border-secondary-300 text-secondary-300 font-extrabold`,
+                      ]}
+                    >
+                      M
+                    </div>
+                    <div
+                      css={[
+                        tw`max-w-min p-1 border-4 border-transparent`,
+                        slot.size.toString() === '3' &&
+                          tw`border-secondary-300 text-secondary-300 font-extrabold`,
+                      ]}
+                    >
+                      L
+                    </div>
+                  </div>
+                  <div tw=" text-center text-2xl">
+                    <p tw="text-secondary-300 inline font-bold">
+                      {difficultyMap[slot.difficulty]}
+                    </p>
+                    <p tw="text-primary-300 inline font-normal"> to park</p>
+                  </div>
+                  <div tw="text-center text-2xl">
+                    <p tw="text-secondary-300 inline font-bold">
+                      {slot.price?.toString().replace('.', ',')}
+                    </p>
+                    <p tw="text-primary-300 inline font-normal"> €/day</p>
+                  </div>
+                </div>
+                {isOwner && (
+                  <>
+                    <div tw="flex justify-center">
+                      <MyButton variant={'delete'} onClick={handleClickOpen}>
+                        Delete slot
+                      </MyButton>
+                      <Dialog
+                        open={openDialog}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                      >
+                        <DialogTitle
+                          sx={{ m: 0, p: 5 }}
+                          id="alert-dialog-title"
+                        >
+                          {'Do you really want to delete this slot?'}
+                          <IconButton
+                            aria-label="close"
+                            onClick={handleClose}
+                            sx={{
+                              position: 'absolute',
+                              right: 8,
+                              top: 8,
+                              color: (theme) => theme.palette.grey[500],
+                            }}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        </DialogTitle>
+
+                        <DialogActions>
+                          <Button onClick={handleClose}>Cancel</Button>
+                          <Button
+                            sx={{ color: '#ff0000' }}
+                            onClick={delete_slot}
+                            autoFocus
+                          >
+                            Delete
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
+                    <div tw="my-2 w-full flex justify-center items-center">
+                      <div tw="border-4 border-primary-200 rounded-md max-w-max">
+                        <StaticDatePickerWidget slotId={slot._id} />
+                      </div>
+                    </div>
+                  </>
+                )}
+                {!isOwner && (
+                  <>
+                    {vehicleId && (
+                      <div tw="my-2 p-3 border border-primary-200 shadow-sm rounded-lg bg-white flex flex-col items-center justify-center gap-3">
+                        <h4 tw="text-2xl text-center text-primary-400 font-bold">
+                          Place a reserve
+                        </h4>
+                        <CheckoutSlotForm
+                          vehicleId={vehicleId}
+                          slotId={slot._id}
+                        />
+                      </div>
+                    )}
+                    {!vehicleId && (
+                      <>
+                        <div tw="flex justify-center">
+                          <Link href={'/reserve/create'}>
+                            <MyButton variant={'neutral'}>
+                              Place a reserve
+                            </MyButton>
+                          </Link>
+                        </div>
+
+                        <div tw="my-2 w-full flex justify-center items-center">
+                          <div tw="border-4 border-primary-200 rounded-md max-w-max">
+                            <StaticDatePickerWidget slotId={slot._id} />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-          )}
-          {!slot && <p>Parking slot not found</p>}
-        </div>
+          </div>
+        )}
+        {!slot && (
+          <>
+            <Link href={`/parking/list`}>
+              <MyButton variant="neutral" icon={<IoChevronBack size={18} />}>
+                View parking
+              </MyButton>
+            </Link>
+            <div tw="flex flex-col justify-center items-center gap-2">
+              <div tw="text-primary-400 text-3xl font-bold">LOADING</div>
+              <GridLoader color={'#14560D'} size={15} />
+            </div>
+          </>
+        )}
       </div>
-    </>
+    </AnimatePresence>
   );
 };
 

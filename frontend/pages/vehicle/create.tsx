@@ -1,29 +1,30 @@
-import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
+import { AnimatePresence } from 'framer-motion';
 import { VehicleForm } from '../../components/forms/VehicleForm';
+import { Button } from '../../components/shared/Button';
+import { IoChevronBack } from 'react-icons/io5';
+import Link from 'next/link';
 
 const Page = () => {
-  const router = useRouter();
-
-  const { user } = useUser();
-  const { data: userProfile } = useSWR(
-    user?.sub ? `/userProfile/${user?.sub}` : null
-  );
-
   return (
-    <>
-      <button
-        tw="border border-black bg-gray-300 p-1"
-        onClick={() => router.push(`/user/myProfile`)}
-      >
-        Back
-      </button>
-      <div tw=" mx-auto ">
-        <h1 tw="text-4xl font-extrabold">CREATE VEHICLE</h1>
-        <VehicleForm />
+    <AnimatePresence>
+      <div tw="p-3 rounded-b-lg bg-white">
+        <Link href={`/user/myProfile`}>
+          <Button variant="neutral" icon={<IoChevronBack size={18} />}>
+            Back
+          </Button>
+        </Link>
+
+        <div tw="">
+          <h1 tw="text-5xl font-extrabold">
+            <p tw="text-primary-400 inline">Create new </p>
+            <p tw="text-secondary-300 inline">vehicle</p>
+          </h1>
+          <VehicleForm />
+        </div>
       </div>
-    </>
+    </AnimatePresence>
   );
 };
 

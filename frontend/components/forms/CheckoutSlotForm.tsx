@@ -12,6 +12,7 @@ import {
 } from '../../lib/config';
 import axios, { AxiosResponse } from 'axios';
 import { IReserve } from '../../types/IReserve';
+import { Button } from '../shared/Button';
 
 export const CheckoutSlotForm = (props) => {
   const { vehicleId, slotId } = props;
@@ -142,8 +143,8 @@ export const CheckoutSlotForm = (props) => {
   return (
     <>
       <FormProvider {...methods}>
-        <div tw="">
-          <div tw="my-1">
+        <div tw="flex flex-col items-center gap-4">
+          <div tw="">
             <Controller
               name="period"
               control={methods.control}
@@ -170,9 +171,9 @@ export const CheckoutSlotForm = (props) => {
               </p>
             )}
           </div>
-          <button tw="border bg-green-200 p-1" onClick={() => handle_submit()}>
+          <Button variant="submit" onClick={() => handle_submit()}>
             Checkout reserve
-          </button>
+          </Button>
         </div>
       </FormProvider>
     </>

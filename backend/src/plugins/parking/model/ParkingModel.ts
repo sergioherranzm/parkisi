@@ -2,9 +2,10 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { UserProfileDocument } from '../../userProfile/model/UserProfileModel';
 
 export interface ParkingDocument extends Document {
-  address: string;
+  street: string;
+  streetNumber?: string;
   postalCode?: string;
-  city?: string;
+  city: string;
   province?: string;
   location: { type: 'Point'; coordinates: [number, number] }; //GeoJSON
   description: string;
@@ -14,9 +15,10 @@ export interface ParkingDocument extends Document {
 
 const schema = new Schema(
   {
-    address: { type: String, required: true },
+    street: { type: String, required: true },
+    streetNumber: String,
     postalCode: String,
-    city: String,
+    city: { type: String, required: true },
     province: String,
     location: {
       type: { type: String, enum: ['Point'], required: true },

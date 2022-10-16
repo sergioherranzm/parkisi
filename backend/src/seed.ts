@@ -58,8 +58,10 @@ import { VehicleModel } from './plugins/vehicle/model/VehicleModel';
   /*
   // Create PARKINGS
   const parking1 = await ParkingModel.create({
-    address: 'address_seed',
+    street: 'address_seed',
+    streetNumber: '1',
     postalCode: 'seed_code',
+    city: 'seed_city'
     location: { type: 'Point', coordinates: [-3.7003632, 40.4765501] },
     description: 'Loren ipsum description',
     image:

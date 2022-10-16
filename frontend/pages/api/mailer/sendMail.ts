@@ -117,9 +117,9 @@ const api_route: NextApiHandler = async (req, res) => {
     html: emailTemplate.htmlContent,
   };
 
-  //const emailResponse = await sgMail.send(msg);
   //------------------------------------------------------------------------------------------------------------------------------------------------
-  const emailResponse = 'Email DEACTIVATED'; //***PLEASE DELETE*** This line is just to pause email api to not reach the mail limit.
+  //const emailResponse = 'Email DEACTIVATED'; // This line is just to pause email api to not reach the mail limit.
+  const emailResponse = await sgMail.send(msg);
   //------------------------------------------------------------------------------------------------------------------------------------------------
 
   res.json({ emailResponse: emailResponse });

@@ -40,9 +40,9 @@ export const DateRangePickerWidget: React.FC<{
         shouldDisableDate={disableReserves}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
-            <TextField {...startProps} required />
+            <TextField {...startProps} />
             <Box sx={{ mx: 2 }}> to </Box>
-            <TextField {...endProps} required />
+            <TextField {...endProps} />
           </React.Fragment>
         )}
       />

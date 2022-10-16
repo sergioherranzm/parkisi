@@ -34,7 +34,7 @@ const api_route: NextApiHandler = async (req, res) => {
       res.json({ lng, lat });
     },
     (error) => {
-      //res.status(404);
+      console.error('ERROR retrieving coordinates from address:', error);
       res.json({ error: error.toString() });
     }
   );

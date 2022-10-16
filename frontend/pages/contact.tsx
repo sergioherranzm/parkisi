@@ -178,16 +178,14 @@ C203.522,159.957,159.977,203.513,106.465,203.513z"
             </motion.svg>
             <h1 tw="my-2 text-7xl font-extrabold text-primary-400 ">PARKISI</h1>
           </div>
-          <div tw="text-4xl flex items-center font-bold text-primary-400">
+          <div tw="text-4xl flex flex-col items-center font-bold gap-5 text-primary-400">
+            <p>Sergio Herranz Montoya</p>
             <Link href="/user/myProfile">
-              <a tw="text-xl mr-2 underline cursor-pointer hover:text-secondary-400">
-                Sign in
+              <a tw="text-xl mr-2 hover:underline cursor-pointer hover:text-secondary-400">
+                https://github.com/sergioherranzm/parkisi
               </a>
             </Link>
-            <p tw="text-xl">
-              now to start offering and reserving parkings slots all over the
-              globe
-            </p>
+            <p tw="text-xl">sergioherranzm@gmail.com</p>
           </div>
         </div>
       </AnimatePresence>

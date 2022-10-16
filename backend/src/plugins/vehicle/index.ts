@@ -4,6 +4,7 @@ import { deleteVehicleById } from './routes/deleteVehicleById';
 import { getVhicleById } from './routes/getVehicleById';
 import { getVhicleByPlate } from './routes/getVehicleByPlate';
 import { getVehiclesByUser } from './routes/getVehiclesByUser';
+import { updateVehicle } from './routes/updateVehicle';
 
 export const vehiclePlugin: FastifyPluginAsync = async (app) => {
   app.register(getVehiclesByUser);
@@ -11,4 +12,5 @@ export const vehiclePlugin: FastifyPluginAsync = async (app) => {
   app.register(getVhicleByPlate);
   app.register(createVehicle);
   app.register(deleteVehicleById);
+  app.register(updateVehicle);
 };

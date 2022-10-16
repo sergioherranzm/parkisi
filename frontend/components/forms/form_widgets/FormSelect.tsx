@@ -8,16 +8,28 @@ interface SelectProps {
   onChange?: any;
   onBlur?: any;
   error?: string;
+  value: string;
+  disabled?: boolean;
 }
 
 export const FormSelect = React.forwardRef<HTMLSelectElement, SelectProps>(((
   props,
   ref
 ) => {
-  const { options, name, label, onChange, onBlur, error } = props;
+  const {
+    options,
+    name,
+    value,
+    label,
+    onChange,
+    onBlur,
+    error,
+    disabled = false,
+  } = props;
+
   return (
     <div tw="w-full">
-      <label htmlFor={name} tw="font-bold">
+      <label htmlFor={name} tw="p-1 first:font-bold text-primary-400">
         {label}
       </label>
       <select
@@ -28,15 +40,18 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, SelectProps>(((
         }}
         onBlur={onBlur}
         css={[
-          tw`border border-gray-200 rounded block p-1 outline-none w-full`,
+          tw`border border-primary-000 text-primary-400 rounded block p-1 outline-none w-full`,
           error && tw`border-red-500`,
+          disabled && tw`bg-gray-200 hover:bg-gray-200`,
         ]}
+        {...(disabled ? { disabled: true } : {})}
       >
         {options.map((op) => (
           <option
-            css={[tw`p-1 border rounded-lg border-purple-200 transition-all`]}
+            css={[tw`text-primary-400`]}
             key={op.value}
             value={op.value}
+            {...(value === op.value ? { selected: true } : {})}
           >
             {op.label}
           </option>
