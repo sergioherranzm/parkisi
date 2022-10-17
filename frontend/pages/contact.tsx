@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import Link from 'next/link';
 
 const Home = () => {
   return (
@@ -180,11 +179,14 @@ C203.522,159.957,159.977,203.513,106.465,203.513z"
           </div>
           <div tw="text-4xl flex flex-col items-center font-bold gap-5 text-primary-400">
             <p>Sergio Herranz Montoya</p>
-            <Link href="/user/myProfile">
-              <a tw="text-xl mr-2 hover:underline cursor-pointer hover:text-secondary-400">
-                https://github.com/sergioherranzm/parkisi
-              </a>
-            </Link>
+
+            <a
+              href="https://github.com/sergioherranzm/parkisi"
+              tw="text-xl mr-2 hover:underline cursor-pointer hover:text-secondary-400"
+            >
+              https://github.com/sergioherranzm/parkisi
+            </a>
+
             <p tw="text-xl">sergioherranzm@gmail.com</p>
           </div>
         </div>

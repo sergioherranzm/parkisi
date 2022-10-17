@@ -1,12 +1,9 @@
 <p align="center">
-  <a href="https://shields.io/">
-    <img src="https://img.shields.io/badge/npm-8.12.1-green.svg" alt="npm version">
+  <a href="https://camo.githubusercontent.com/">
+    <img src="https://camo.githubusercontent.com/42f5986dec98935a91e5ba9ff7dd1e4999472746e5771c74136abfa5b0e006c9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6e6578742e6a732532302d2532333030303030302e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d6e6578742e6a73266c6f676f436f6c6f723d7768697465" alt="nextjs">
   </a>
   <a href="https://github.com/ellerbrock/typescript-badges">
     <img src="https://badges.frapsoft.com/typescript/code/typescript.svg?v=101" alt="typescript">
-  </a>
-  <a href="https://shields.io/">
-    <img src="https://img.shields.io/badge/built%20with-vite-purple.svg" alt="vite">
   </a>
 </p>
 
@@ -137,7 +134,7 @@ Due to the short time available for the development some functionalities have be
 - Filter for all list
 - User deletion
 - Enhacement of map navigation
-- Art work
+- Design and art work
 
 ## Acknowledgements <a name = "acknowledgement"></a>
 
