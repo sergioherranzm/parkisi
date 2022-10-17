@@ -348,6 +348,19 @@ const Page = () => {
                       {reserveWithVehicle.vehicle?.model}
                     </div>
                   )}
+                  <div tw="text-xl  font-semibold flex gap-2">
+                    <div tw="text-primary-300">Total amount: </div>{' '}
+                    <div tw="text-secondary-400">
+                      {' '}
+                      {(
+                        reserveWithParking.slot?.price *
+                        reserveWithParking.period.length
+                      )
+                        .toString()
+                        .replace('.', ',')}{' '}
+                      €
+                    </div>
+                  </div>
                   <div tw="mt-8 flex gap-5">
                     <Link
                       href={`/parking/${reserveWithParking.slot?.parking._id}`}
