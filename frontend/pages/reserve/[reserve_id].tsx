@@ -51,7 +51,10 @@ const Page = () => {
       //send mail to user
       let mailType = 'reserveDeletion';
       let mailTo = userProfile.email;
-      const address = reserveWithParking?.slot?.parking?.address;
+      const address =
+        reserveWithParking?.slot?.parking?.street +
+        ', ' +
+        reserveWithParking?.slot?.parking?.streetNumber;
       const period = `from ${reserveWithParking?.period[0]} to ${
         reserveWithParking?.period[reserveWithParking?.period.length - 1]
       } (${reserveWithParking?.period.length} days)`;
@@ -87,7 +90,10 @@ const Page = () => {
             <>
               <div tw="p-3 rounded-lg bg-white">
                 <h4 tw="text-4xl">
-                  Reserve on {reserveWithParking.slot?.parking.address}
+                  Reserve on{' '}
+                  {reserveWithParking.slot?.parking.street +
+                    ', ' +
+                    reserveWithParking.slot?.parking.streetNumber}
                 </h4>
                 <button
                   tw="border border-black bg-gray-400 p-1 m-2"

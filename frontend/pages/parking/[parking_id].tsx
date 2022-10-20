@@ -63,7 +63,7 @@ const Page = () => {
           //send mail
           const mailType = 'parkingDeletion';
           const mailTo = userProfile.email;
-          const address = parking.address;
+          const address = parking.street + ', ' + parking.streetNumber;
           const description = parking.description;
           const hyperlink = `${FRONT_URL}parking/list`;
           const url_mail = `${MAILER_URL}/sendMail?mailType=${mailType}&mailTo=${mailTo}&address=${address}&description=${description}&hyperlink=${hyperlink}`;

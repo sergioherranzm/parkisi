@@ -57,7 +57,8 @@ const Page = (props) => {
         //send mail
         const mailType = 'slotDeletion';
         const mailTo = userProfile.email;
-        const address = slot?.parking?.address;
+        const address =
+          slot?.parking?.street + ', ' + slot?.parking?.streetNumber;
         const description = slot?.parking?.description;
         const identification = slot?.identification;
         const hyperlink = `${FRONT_URL}parking/${slot?.parking?._id}`;

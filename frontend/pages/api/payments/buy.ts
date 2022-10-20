@@ -39,7 +39,9 @@ const api_route: NextApiHandler = async (req, res) => {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `Parking reserve on ${slot.parking.address} street`,
+            name: `Parking reserve on ${
+              slot.parking.street + ', ' + slot.parking.streetNumber
+            } street`,
             description: `Reserve from ${period[0]} to ${
               period[period.length - 1]
             } (${period.length} days) in parking slot ${
@@ -53,7 +55,7 @@ const api_route: NextApiHandler = async (req, res) => {
       },
     ],
     metadata: {
-      address: slot.parking.address,
+      address: slot.parking.street + ', ' + slot.parking.streetNumber,
       period: `from ${period[0]} to ${period[period.length - 1]} (${
         period.length
       } days)`,

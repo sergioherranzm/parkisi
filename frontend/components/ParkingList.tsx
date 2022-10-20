@@ -11,7 +11,6 @@ import { BiCurrentLocation } from 'react-icons/bi';
 import Link from 'next/link';
 import { difficultyMap } from '../types/difficultyMap';
 import tw from 'twin.macro';
-import { valueToPercent } from '@mui/base';
 
 export const ParkingList: React.FC<{
   lat: string;

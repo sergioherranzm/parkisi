@@ -70,7 +70,10 @@ const Page = () => {
       //send mail to user
       let mailType = 'reserveDeletion';
       let mailTo = userProfile.email;
-      const address = reserveWithParking?.slot?.parking?.address;
+      const address =
+        reserveWithParking?.slot?.parking?.street +
+        ', ' +
+        reserveWithParking?.slot?.parking?.streetNumber;
       const period = `from ${reserveWithParking?.period[0]} to ${
         reserveWithParking?.period[reserveWithParking?.period.length - 1]
       } (${reserveWithParking?.period.length} days)`;
@@ -353,8 +356,11 @@ const Page = () => {
                     <div tw="text-secondary-400">
                       {' '}
                       {(
-                        reserveWithParking.slot?.price *
-                        reserveWithParking.period.length
+                        Math.round(
+                          reserveWithParking.slot?.price *
+                            reserveWithParking.period.length *
+                            100
+                        ) / 100
                       )
                         .toString()
                         .replace('.', ',')}{' '}

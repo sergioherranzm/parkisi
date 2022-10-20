@@ -42,7 +42,7 @@ export const SlotForm = (props) => {
       //send mail
       const mailType = 'slotCreation';
       const mailTo = userProfile?.email;
-      const address = parking?.address;
+      const address = parking?.street + ', ' + parking?.streetNumber;
       const description = parking?.description;
       const identification = slotData.identification;
       const hyperlink = `${FRONT_URL}parking/${parking?._id}`;

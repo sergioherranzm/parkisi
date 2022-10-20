@@ -48,9 +48,6 @@ export const ReserveForm = () => {
           geopos.coords.longitude.toString(),
           geopos.coords.latitude.toString(),
         ]);
-        //------------------------------------------------------------------------------------------------------------------------------------------------
-        setSelectedCoordinates(['-3.684771', '40.469208']); //***PLEASE DELETE*** This line is just to hide my real location when presenting the project.
-        //------------------------------------------------------------------------------------------------------------------------------------------------
         setSelectedVehicle(vehicle);
         setAddressReady('OK');
       },
