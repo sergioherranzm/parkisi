@@ -44,7 +44,7 @@ export const CheckoutSlotForm = (props) => {
     //send mail to user
     let mailType = 'reserveCreation';
     let mailTo = userProfile.email;
-    const address = slot?.parking?.address;
+    const address = slot?.parking?.street + ', ' + slot?.parking?.streetNumber;
     const periodStr = `from ${period[0]} to ${period[period.length - 1]} (${
       period.length
     } days)`;

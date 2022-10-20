@@ -1,11 +1,36 @@
 <p align="center">
-  <a href="https://camo.githubusercontent.com/">
-    <img src="https://camo.githubusercontent.com/42f5986dec98935a91e5ba9ff7dd1e4999472746e5771c74136abfa5b0e006c9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6e6578742e6a732532302d2532333030303030302e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d6e6578742e6a73266c6f676f436f6c6f723d7768697465" alt="nextjs">
+  <a href="#">
+    <img src="https://img.shields.io/badge/global-Typescript-00a5d8" alt="badge">
   </a>
-  <a href="https://github.com/ellerbrock/typescript-badges">
-    <img src="https://badges.frapsoft.com/typescript/code/typescript.svg?v=101" alt="typescript">
+    <a href="#">
+    <img src="https://img.shields.io/badge/global-Yarn-009912" alt="badge">
+  </a>
+    <a href="#">
+    <img src="https://img.shields.io/badge/back-Fastify-fcee21" alt="badge">
+  </a>
+    <a href="#">
+    <img src="https://img.shields.io/badge/back-MongoDB-319905" alt="badge">
+  </a>
+    <a href="#">
+    <img src="https://img.shields.io/badge/front-React-00eded" alt="badge">
+  </a>
+    <a href="#">
+    <img src="https://img.shields.io/badge/front-Next-1c2121" alt="badge">
+  </a>
+    <a href="#">
+    <img src="https://img.shields.io/badge/front-Aut0-2f17aa" alt="badge">
+  </a>
+    <a href="#">
+    <img src="https://img.shields.io/badge/front-Axios-123ee0" alt="badge">
+  </a>
+    </a>
+    <a href="#">
+    <img src="https://img.shields.io/badge/front-Tailwind-ab24ba" alt="badge">
   </a>
 </p>
+
+<!-- A spacer -->
+<p>&nbsp;</p>
 
 <p align="center">
  <img width=200px height=200px src="./frontend/public/favicon.png" alt="logo"></a>
@@ -132,8 +157,9 @@ API endpoints:
 Due to the short time available for the development some functionalities have been cut and postponed for future developments:
 
 - Filter for all list
+- Global map of parkings
+- Upload images for parking/user profile (Amazon S3)
 - User deletion
-- Enhacement of map navigation
 - Design and art work
 
 ## Acknowledgements <a name = "acknowledgement"></a>

@@ -35,7 +35,7 @@ const api_route: NextApiHandler = async (req, res) => {
     /*
     const mailType = 'reserveCreation';
     const mailTo = userProfile.email;
-    const address = reserveWithParking?.slot?.parking?.address;
+    const address = reserveWithParking?.slot?.parking?.street + ', ' + reserveWithParking?.slot?.parking?.streetNumber;
     const period = `from ${reserveWithParking?.period[0]} to ${
       reserveWithParking?.period[reserveWithParking?.period.length - 1]
     } (${reserveWithParking?.period.length} days)`;
